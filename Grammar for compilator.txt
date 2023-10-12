@@ -11,6 +11,13 @@ MoreEq ->  Exp ">=" Exp
 LessEq ->  Exp "<=" Exp
 Less ->  Exp "<" Exp
 More ->  Exp ">" Exp
+Equals -> Exp "==" Exp
+NotEquals -> Exp "!=" Exp
+Add -> Exp "+" Exp
+Substract -> Exp "-" Exp
+Multiply -> Exp "*" Exp
+Divide -> Exp "/" Exp
+
 Block -> "{" Stmt* "}" 
 
 
@@ -19,10 +26,18 @@ Block -> "{" Stmt* "}"
 
 LPAR = "("
 RPAR = ")"
-ID = [a-z][a-z0-9]*
+ID = [a-z][a-z0-9]*    for ex ID: i   in int i = 5;
 IF = "if"
 WHILE = "while"
 PLUS = "+"
 MINUS = "-"
 
+heltal -> 
+input ->
+output ->
 
+
+//recursive descent parsing
+// profiler: string + or StringBuilder 
+rekord for name of variable
+tokens som en rekord klass
