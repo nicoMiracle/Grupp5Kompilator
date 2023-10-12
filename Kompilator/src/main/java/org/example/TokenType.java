@@ -7,7 +7,10 @@ public enum TokenType {
     WHILE,
     FUNCTION,
 
-
+    // Types
+    TYPE_INT,
+    TYPE_STRING,
+    
     // Identifiers and Literals
     IDENTIFIER,
     INTEGER_LITERAL,
