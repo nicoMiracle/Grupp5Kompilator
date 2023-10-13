@@ -10,7 +10,7 @@ public class Main {
 
         // Print the tokens
         for (Token token : tokens) {
-            System.out.println(token.getType() + ": " + token.getLexeme());
+            System.out.println(token);
         }
     }
 }

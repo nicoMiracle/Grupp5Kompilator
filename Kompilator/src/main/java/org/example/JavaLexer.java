@@ -15,25 +15,25 @@ public class JavaLexer {
     public LinkedList<Token> lex(String input) {
         LinkedList<Token> tokenList = new LinkedList<>();
         int i = 0;
-
+        int lineNumber=1;
         while (i < input.length()) {
             char currentChar = input.charAt(i);
-
             switch (currentChar) {
                 case '(':
-                    tokenList.add(new Token(TokenType.LPAREN, "("));
+                    tokenList.add(new Token(TokenType.LPAREN, "(", lineNumber));
                     i++;
                     break;
                 case ')':
-                    tokenList.add(new Token(TokenType.RPAREN, ")"));
+                    tokenList.add(new Token(TokenType.RPAREN, ")",lineNumber));
                     i++;
                     break;
                 case '=':
-                    tokenList.add(new Token(TokenType.ASSIGN, "="));
+                    tokenList.add(new Token(TokenType.ASSIGN, "=",lineNumber));
                     i++;
                     break;
                 case ';':
-                    tokenList.add(new Token(TokenType.EOF, ";"));
+                    tokenList.add(new Token(TokenType.EOF, ";",lineNumber));
+                    lineNumber++;
                     i++;
                     break;
                 case ' ':
@@ -46,14 +46,14 @@ public class JavaLexer {
                     if (Character.isDigit(currentChar)) {
                         String number = getAtom(input, i);
                         i += number.length();
-                        tokenList.add(new Token(TokenType.TYPE_INT, number));
+                        tokenList.add(new Token(TokenType.TYPE_INT, number,lineNumber));
                     } else if (Character.isLetter(currentChar)) {
                         String atom = getAtom(input, i);
                         i += atom.length();
                         if (atom.equals("int")) {
-                            tokenList.add(new Token(TokenType.TYPE_INT, atom));
+                            tokenList.add(new Token(TokenType.TYPE_INT, atom,lineNumber));
                         } else {
-                            tokenList.add(new Token(TokenType.IDENTIFIER, atom));
+                            tokenList.add(new Token(TokenType.IDENTIFIER, atom,lineNumber));
                         }
                     }
                     break;

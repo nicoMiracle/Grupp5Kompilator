@@ -5,9 +5,10 @@ public class Token {
     private String lexeme; // The value of token
     private int line; // The line number where the token was found
 
-    public Token(TokenType type, String lexeme) {
+    public Token(TokenType type, String lexeme, int line) {
         this.type = type;
         this.lexeme = lexeme;
+        this.line = line;
     }
 
     public TokenType getType() {
