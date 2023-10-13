@@ -1,2 +1,4 @@
-package Grupp5Kompilator;public class Parser {
+package Grupp5Kompilator;
+
+public class Parser {
 }
