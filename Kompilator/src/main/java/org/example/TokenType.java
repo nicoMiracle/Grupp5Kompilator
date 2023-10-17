@@ -1,3 +1,4 @@
+
 package org.example;
 
 public enum TokenType {
@@ -44,3 +45,4 @@ public enum TokenType {
     // End of File
     EOF
 }
+
