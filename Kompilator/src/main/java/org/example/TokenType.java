@@ -43,6 +43,7 @@ public enum TokenType {
     FUNCTION_RETURN,
 
     // End of File
-    EOF
-}
+    EOF,
+    COMMA
+    }
 

@@ -19,6 +19,14 @@ public class JavaLexer {
         while (i < input.length()) {
             char currentChar = input.charAt(i);
             switch (currentChar) {
+                case '{':
+                    tokenList.add(new Token(TokenType.LBRACE, "{", lineNumber));
+                    i++;
+                    break;
+                case '}':
+                    tokenList.add(new Token(TokenType.RBRACE, "}", lineNumber));
+                    i++;
+                    break;
                 case '(':
                     tokenList.add(new Token(TokenType.LPAREN, "(", lineNumber));
                     i++;
@@ -28,7 +36,17 @@ public class JavaLexer {
                     i++;
                     break;
                 case '=':
+                    int nextCharPosition = i+1;
+                    if(input.charAt(nextCharPosition)=='='){
+                        tokenList.add(new Token(TokenType.EQUAL, "==",lineNumber));
+                        i+=2;
+                        break;
+                    }
                     tokenList.add(new Token(TokenType.ASSIGN, "=",lineNumber));
+                    i++;
+                    break;
+                case '+':
+                    tokenList.add(new Token(TokenType.PLUS, "+",lineNumber));
                     i++;
                     break;
                 case ';':
@@ -36,7 +54,13 @@ public class JavaLexer {
                     lineNumber++;
                     i++;
                     break;
+                case ',':
+                    tokenList.add(new Token(TokenType.COMMA, ",",lineNumber));
+                    i++;
+                    break;
                 case ' ':
+                    i++;
+                    break;
                 case '\t':
                 case '\n':
                     // Skip whitespace characters
@@ -47,17 +71,24 @@ public class JavaLexer {
                     if (Character.isDigit(currentChar)) {
                         String number = getAtom(input, i);
                         i += number.length();
-                        tokenList.add(new Token(TokenType.TYPE_INT, number,lineNumber));
+                        tokenList.add(new Token(TokenType.INTEGER_LITERAL, number,lineNumber));
                     } else if (Character.isLetter(currentChar)) {
                         String atom = getAtom(input, i);
                         i += atom.length();
                         if (atom.equals("int")) {
                             tokenList.add(new Token(TokenType.TYPE_INT, atom,lineNumber));
+                        } else if(atom.equals("while")){
+                            tokenList.add(new Token(TokenType.WHILE, atom, lineNumber));
+                        }else if(atom.equals("return")){
+                            tokenList.add(new Token(TokenType.FUNCTION_RETURN, atom, lineNumber));
+                        } else if(input.charAt(i+1)=='('){
+                            tokenList.add(new Token(TokenType.FUNCTION, atom,lineNumber));
                         } else {
                             tokenList.add(new Token(TokenType.IDENTIFIER, atom,lineNumber));
                         }
+                    }else{
+                        throw new IllegalArgumentException("Invalid character: " + currentChar);
                     }
-                    break;
             }
         }
         return tokenList;
