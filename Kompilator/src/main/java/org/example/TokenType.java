@@ -3,10 +3,11 @@ package org.example;
 
 public enum TokenType {
     // Keywords
-    IF,
-    ELSE,
-    WHILE,
-    FUNCTION,
+    KEYWORD_IF,
+    KEYWORD_ELSE,
+    KEYWORD_WHILE,
+    KEYWORD_FUNCTION,
+    KEYWORD_RETURN,
 
     // Types
     TYPE_INT,
@@ -32,11 +33,17 @@ public enum TokenType {
     GREATER_EQUAL,// Greater Than or Equal To (>=)
 
     // Delimiters and Punctuation
-    LPAREN,   // Opening Left parenthesis
-    RPAREN,  // Closing Right parenthesis
-    LBRACE,   // Opening Left brace
-    RBRACE,  // Closing Right brace
+    SEMICOLON,    // Statement terminator
+    COMMA,        // Parameter separator
+    LPAREN,   // Opening parenthesis
+    RPAREN,  // Closing parenthesis
+    LEFT_BRACE,   // Opening brace
+    RIGHT_BRACE,  // Closing brace
 
+    // Control Flow
+    CONTROL_IF,
+    CONTROL_ELSE,
+    CONTROL_WHILE,
 
     // Function Control
     FUNCTION_DECLARATION,
