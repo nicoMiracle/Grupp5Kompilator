@@ -1,40 +1,58 @@
-function-name -> [a-zA-Z][a-zA-Z0-9]*
-variable -> [a-zA-Z_][a-zA-Z0-9_]*
-number -> [0-9]+
-string -> ".*"
+program -> statementList
+statementList -> statement*
+statement -> (whileStatement | ifStatement | expressionStatement | declarationStatement | assignStatement | returnStatement
+| blockStatement | inputStatement | outputStatement |methodDeclarationStatement)
 
-Stmt -> WhileStm | IfStm | AssignmStmt | Block
-WhileStm -> while "(" Exp ")" Stmt
-IfStm -> if "(" Exp ")" Stmt
-Exp -> ID | MoreEq | LessEq | More | Less 
-MoreEq ->  Exp ">=" Exp
-LessEq ->  Exp "<=" Exp
-Less ->  Exp "<" Exp
-More ->  Exp ">" Exp
-Equals -> Exp "==" Exp
-NotEquals -> Exp "!=" Exp
-Add -> Exp "+" Exp
-Substract -> Exp "-" Exp
-Multiply -> Exp "*" Exp
-Divide -> Exp "/" Exp
+whileStatement -> "while" "(" expression ")" blockStatement
+ifStatement -> "if" "(" expression ")" blockstatement
+expressionStatement -> expression ";"
+declarationStatement-> (type ID ";") | type assignStatement)
+assignStatement -> ID "=" expression ";"
+returnStatement -> "return" expression ";"
+blockStatement -> "{" statement* "}"
 
-Block -> "{" Stmt* "}" 
+inputStatement -> "input.nextLine();"
+outputStatement -> "System.out.println" "(" expression ")"
 
+methodDeclarationStatement -> returnType ID "(" ParameterList ")"" blockStatement
+ParameterList -> parameter*
+parameter -> Type ID
 
+expression -> term+
+term -> intLiteral | ID | StringLiteral | Equals | Add |subtract
 
+Equals -> "==" expression
+Add -> "+" expression
+Subtract -> ""-" expression
 
+//keeping these in
+MoreEq ->  ">=" expression
+LessEq ->  "<=" expression
+Less ->  "<" expression
+More ->  ">" expression
+NotEquals -> "!=" expression
 
-LPAR = "("
-RPAR = ")"
-ID = [a-z][a-z0-9]*    for ex ID: i   in int i = 5;
-IF = "if"
-WHILE = "while"
-PLUS = "+"
-MINUS = "-"
+intLiteral -> digit+
+StringLiteral -> "(Any character)*"
+returnType -> (type|void)
+type -> (int | string)
+ID -> letter (letter|digit)*
+letter -> (a...z | A...Z)
+digit -> 0...9
 
-heltal -> 
-input ->
-output ->
+WHILE
+IF
+RETURN
+PLUS
+MINUS
+LPAR
+RPAR
+LBRAC
+RBRAC
+ASSIGN -> =
+EQUAL -> ==
+INPUT.NEXT.LINE()
+System.out.println
 
 
 //recursive descent parsing

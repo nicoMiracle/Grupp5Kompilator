@@ -4,32 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38060415-9881-44a2-821f-e5e4fe74b6c6" name="Changes" comment="Trying to merge correctly, from IntelliJ">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/ASTNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/ASTVisitor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/AssignmentStatementNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/BinaryExpressionNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/BlockStatementNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/ErrorListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/ExpressionNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/FunctionCallNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/IfStatementNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/IntegerLiteralNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Main_Parser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/MyErrorListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Parser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/PrintVisitor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/ProgramNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/StatementNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/StringLiteralNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/VariableDeclarationNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/VariableNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/WhileStatementNode.java" afterDir="false" />
+    <list default="true" id="38060415-9881-44a2-821f-e5e4fe74b6c6" name="Changes" comment="Merging together the classes from Fortuna too">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Visitor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Code_Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Code_Generator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main_Lexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/TokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Grammar for compilator.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Grammar for compilator.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/CodeGeneratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/CodeGeneratorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main_Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main_Parser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +24,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="MainPatch1.0" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -64,9 +49,8 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/rober/IdeaProjects/Grupp5Kompilator/Kompilator/src/main/java/org/example",
+    "last_opened_file_path": "C:/Users/rober/IdeaProjects/DogRegister",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -113,9 +97,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="CodeGeneratorTest.GenerateIntAssign" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Kompilator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.CodeGeneratorTest" />
+      <option name="METHOD_NAME" value="GenerateIntAssign" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main_Parser" />
+        <item itemvalue="JUnit.CodeGeneratorTest.GenerateIntAssign" />
         <item itemvalue="Application.Main_Lexer" />
       </list>
     </recent_temporary>
@@ -132,7 +133,7 @@
       <workItem from="1697108268720" duration="26152000" />
       <workItem from="1697296752496" duration="1243000" />
       <workItem from="1697535766546" duration="1145000" />
-      <workItem from="1697545065515" duration="1730000" />
+      <workItem from="1697545065515" duration="11081000" />
     </task>
     <task id="LOCAL-00001" summary="Trying to merge correctly, from IntelliJ">
       <created>1697545496940</created>
@@ -141,7 +142,14 @@
       <option name="project" value="LOCAL" />
       <updated>1697545496940</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Merging together the classes from Fortuna too">
+      <created>1697551783534</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1697551783534</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -160,6 +168,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Trying to merge correctly, from IntelliJ" />
-    <option name="LAST_COMMIT_MESSAGE" value="Trying to merge correctly, from IntelliJ" />
+    <MESSAGE value="Merging together the classes from Fortuna too" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merging together the classes from Fortuna too" />
   </component>
 </project>
