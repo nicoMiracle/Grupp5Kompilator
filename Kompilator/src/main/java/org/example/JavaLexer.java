@@ -40,6 +40,7 @@ public class JavaLexer {
                 case '\t':
                 case '\n':
                     // Skip whitespace characters
+                    lineNumber++;
                     i++;
                     break;
                 default:
@@ -59,7 +60,6 @@ public class JavaLexer {
                     break;
             }
         }
-
         return tokenList;
     }
 }

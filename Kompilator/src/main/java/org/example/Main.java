@@ -5,7 +5,7 @@ import java.util.LinkedList;
 public class Main {
     public static void main(String[] args) {
         JavaLexer lexer = new JavaLexer();
-        String input = "int i = 5;";
+        String input = "int i = 555; int j = 231";
         LinkedList<Token> tokens = lexer.lex(input);
 
         // Print the tokens
