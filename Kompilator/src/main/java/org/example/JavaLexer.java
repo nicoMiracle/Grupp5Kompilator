@@ -9,12 +9,19 @@ public class JavaLexer {
         this.listener = listener;
     }
 
-    public String getAtom(String text, int i) {
+    protected String getAtom(String text, int i) {
         int j = i;
         while (j < text.length() && (Character.isLetter(text.charAt(j)) || Character.isDigit(text.charAt(j)))) {
             j++;
         }
         return text.substring(i, j);
+    }
+    protected String getStringValue(String text, int i) {
+        int j = i;
+        do{
+            j++;
+        }while(j < text.length() && text.charAt(j)!='"');
+        return text.substring(i, j+1);
     }
 
     public LinkedList<Token> lex(String input) {
@@ -54,6 +61,10 @@ public class JavaLexer {
                     tokenList.add(new Token(TokenType.PLUS, "+",lineNumber));
                     i++;
                     break;
+                case '-':
+                    tokenList.add(new Token(TokenType.MINUS, "-",lineNumber));
+                    i++;
+                    break;
                 case ';':
                     tokenList.add(new Token(TokenType.EOF, ";",lineNumber));
                     lineNumber++;
@@ -65,6 +76,11 @@ public class JavaLexer {
                     break;
                 case ' ':
                     i++;
+                    break;
+                case '"':
+                    String stringValue = getStringValue(input,i);
+                    tokenList.add(new Token(TokenType.STRING_LITERAL, stringValue,lineNumber));
+                    i += stringValue.length();
                     break;
                 case '\t':
                 case '\n':
@@ -82,7 +98,11 @@ public class JavaLexer {
                         i += atom.length();
                         if (atom.equals("int")) {
                             tokenList.add(new Token(TokenType.TYPE_INT, atom,lineNumber));
-                        } else if(atom.equals("while")){
+                        } else if(atom.equals("String")){
+                            tokenList.add(new Token(TokenType.TYPE_STRING, atom, lineNumber));
+                        }else if(atom.equals("if")){
+                            tokenList.add(new Token(TokenType.IF, atom, lineNumber));
+                        }else if(atom.equals("while")){
                             tokenList.add(new Token(TokenType.WHILE, atom, lineNumber));
                         }else if(atom.equals("return")){
                             tokenList.add(new Token(TokenType.FUNCTION_RETURN, atom, lineNumber));
