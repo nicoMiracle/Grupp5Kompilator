@@ -3,6 +3,11 @@ package org.example;
 import java.util.LinkedList;
 
 public class JavaLexer {
+    private DefaultLexerErrorListener listener;
+
+    public void setListener(DefaultLexerErrorListener listener) {
+        this.listener = listener;
+    }
 
     public String getAtom(String text, int i) {
         int j = i;
@@ -87,7 +92,16 @@ public class JavaLexer {
                             tokenList.add(new Token(TokenType.IDENTIFIER, atom,lineNumber));
                         }
                     }else{
-                        throw new IllegalArgumentException("Invalid character: " + currentChar);
+
+                        char invalidChar = input.charAt(i);
+                        String errorMessage = "Unrecognized character: '" + invalidChar + "'";
+
+                        // Report the error using the error listener
+                        listener.lexicalError(errorMessage,lineNumber);
+
+                        // Move to the next character to continue processing
+                        i++;
+
                     }
             }
         }

@@ -5,7 +5,9 @@ import java.util.LinkedList;
 public class Main {
     public static void main(String[] args) {
         JavaLexer lexer = new JavaLexer();
-        String input = "int sum(int a, int b) {return a+b;#}";
+        DefaultLexerErrorListener listener = new DefaultLexerErrorListener();
+        lexer.setListener(listener);
+        String input = "int isdas = 555;##int j = 231;while(sds==5){}int sum(int a, int b) {return a+b;}#";
         LinkedList<Token> tokens = lexer.lex(input);
 
         // Print the tokens
