@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38060415-9881-44a2-821f-e5e4fe74b6c6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DefaultLexerErrorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/DefaultLexerErrorListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/JavaLexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/JavaLexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/LexerErrorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/LexerErrorListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/TokenType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/JavaLexer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/JavaLexer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/Token.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/Token.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +49,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/pavel/IdeaProjects/PathFinder",
+    "last_opened_file_path": "C:/MyProgWork/GroupWorkGit/Grupp5Kompilator/Kompilator",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -48,10 +57,11 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.example.Main" />
       <module name="Kompilator" />
@@ -65,9 +75,76 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="JavaLexerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Kompilator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.JavaLexerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JavaLexerTest.testEmptyStringAssignment" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Kompilator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.JavaLexerTest" />
+      <option name="METHOD_NAME" value="testEmptyStringAssignment" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JavaLexerTest.testGetStringValueWithValidString" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Kompilator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.JavaLexerTest" />
+      <option name="METHOD_NAME" value="testGetStringValueWithValidString" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JavaLexerTest.testSystemOutPrintln" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Kompilator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.JavaLexerTest" />
+      <option name="METHOD_NAME" value="testSystemOutPrintln" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.JavaLexerTest" />
+        <item itemvalue="JUnit.JavaLexerTest.testGetStringValueWithValidString" />
+        <item itemvalue="JUnit.JavaLexerTest.testSystemOutPrintln" />
+        <item itemvalue="JUnit.JavaLexerTest.testEmptyStringAssignment" />
       </list>
     </recent_temporary>
   </component>
@@ -83,7 +160,8 @@
       <workItem from="1697108268720" duration="26152000" />
       <workItem from="1697296752496" duration="1243000" />
       <workItem from="1697535766546" duration="1145000" />
-      <workItem from="1697536926102" duration="24074000" />
+      <workItem from="1697536926102" duration="58554000" />
+      <workItem from="1697746364070" duration="25363000" />
     </task>
     <servers />
   </component>

@@ -44,6 +44,7 @@ public enum TokenType {
 
     // End of File
     EOF,
-    COMMA
+    COMMA,
+    DOT
     }
 
