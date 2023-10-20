@@ -164,9 +164,29 @@ public class JavaLexerTest {
         assertThat(actualTokens, IsIterableContainingInOrder.contains(expectedTokens.toArray()));
     }
     @Test
+    public void testLexValidInput() {
+        JavaLexer lexer = new JavaLexer();
+        String input = "x = y.getInt();";
+
+        List<Token> expectedTokens = Arrays.asList(
+                new Token(TokenType.IDENTIFIER, "x", 1),
+                new Token(TokenType.ASSIGN, "=", 1),
+                new Token(TokenType.IDENTIFIER, "y", 1),
+                new Token(TokenType.DOT, ".", 1),
+                new Token(TokenType.IDENTIFIER, "getInt", 1),
+                new Token(TokenType.LPAREN, "(", 1),
+                new Token(TokenType.RPAREN, ")", 1),
+                new Token(TokenType.EOF, ";", 1)
+        );
+
+        List<Token> actualTokens = lexer.lex(input);
+
+        assertEquals(expectedTokens, actualTokens);
+    }
+    @Test
     public void testWhileLoopWithAssignment() {
         JavaLexer lexer = new JavaLexer();
-        String input = "int i = 0; while(i<100){a=a+5; i=i+1;}";
+        String input = "int i = 0; while(i==0){a=a+5; i=i+1;}";
 
         Token[] expectedTokens = {
                 new Token(TokenType.TYPE_INT, "int", 1),
@@ -177,8 +197,8 @@ public class JavaLexerTest {
                 new Token(TokenType.WHILE, "while", 2),
                 new Token(TokenType.LPAREN, "(", 2),
                 new Token(TokenType.IDENTIFIER, "i", 2),
-                new Token(TokenType.LESS_EQUAL, "<", 2),
-                new Token(TokenType.INTEGER_LITERAL, "100", 2),
+                new Token(TokenType.EQUAL, "==", 2),
+                new Token(TokenType.INTEGER_LITERAL, "0", 2),
                 new Token(TokenType.RPAREN, ")", 2),
                 new Token(TokenType.LBRACE, "{", 2),
                 new Token(TokenType.IDENTIFIER, "a", 2),

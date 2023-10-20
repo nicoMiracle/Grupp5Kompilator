@@ -60,14 +60,6 @@ public class JavaLexer {
                     tokenList.add(new Token(TokenType.ASSIGN, "=",lineNumber));
                     currentPosition++;
                     break;
-                case '<':
-                    tokenList.add(new Token(TokenType.LESS_EQUAL, "<",lineNumber));
-                    currentPosition++;
-                    break;
-                case '>':
-                    tokenList.add(new Token(TokenType.GREATER_EQUAL, ">",lineNumber));
-                    currentPosition++;
-                    break;
                 case '+':
                     tokenList.add(new Token(TokenType.PLUS, "+",lineNumber));
                     currentPosition++;
