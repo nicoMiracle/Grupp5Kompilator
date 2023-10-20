@@ -1,40 +1,62 @@
-function-name -> [a-zA-Z][a-zA-Z0-9]*
-variable -> [a-zA-Z_][a-zA-Z0-9_]*
-number -> [0-9]+
-string -> ".*"
+program -> statementList
+statementList -> (statement)*
+statement -> (whileStatement | ifStatement | expressionStatement | declarationStatement | assignStatement | returnStatement
+| blockStatement | inputStatement | outputStatement |methodDeclarationStatement | methodCallStatement)
 
-Stmt -> WhileStm | IfStm | AssignmStmt | Block
-WhileStm -> while "(" Exp ")" Stmt
-IfStm -> if "(" Exp ")" Stmt
-Exp -> ID | MoreEq | LessEq | More | Less 
-MoreEq ->  Exp ">=" Exp
-LessEq ->  Exp "<=" Exp
-Less ->  Exp "<" Exp
-More ->  Exp ">" Exp
-Equals -> Exp "==" Exp
-NotEquals -> Exp "!=" Exp
-Add -> Exp "+" Exp
-Substract -> Exp "-" Exp
-Multiply -> Exp "*" Exp
-Divide -> Exp "/" Exp
+whileStatement -> "while" "(" expression ")" blockStatement
+ifStatement -> "if" "(" expression ")" blockstatement
+expressionStatement -> expression ";"
+declarationStatement-> (type ID ";") | (type assignStatement )
+assignStatement -> ID "=" expression ";"
+returnStatement -> "return" expression ";"
+blockStatement -> "{" statementList "}"
+methodDeclarationStatement -> type ID "(" ParameterList ")" blockStatement
+methodCallStatement -> ID "(" expression* ")"
+methodCallStatement -> ID "." ID "(" expression* ")"
 
-Block -> "{" Stmt* "}" 
+expression -> term |addition | subtraction | equals
+term -> intLiteral | ID | StringLiteral | expression | methodCallStatement | inputStatement
 
+addition-> expression "+" expression
+subtraction -> expression "-" expression
+equals -> expression "==" expression
 
+inputStatement -> "input" "." "nextLine" "(" ")"
+outputStatement -> "System" "." "out" "." "println" "(" expression ")"
 
+ParameterList -> parameter*
+parameter -> Type ID
 
+intLiteral -> digit+
+StringLiteral -> "(Any character)*"
+type -> ("int" | "string" | "void")
+ID -> StringLiteral
+letter -> (a...z | A...Z)
+digit -> 0...9
 
-LPAR = "("
-RPAR = ")"
-ID = [a-z][a-z0-9]*    for ex ID: i   in int i = 5;
-IF = "if"
-WHILE = "while"
-PLUS = "+"
-MINUS = "-"
+//keeping these in
+Equals -> "==" expression
+MoreEq ->  ">=" expression
+LessEq ->  "<=" expression
+Less ->  "<" expression
+More ->  ">" expression
+NotEquals -> "!=" expression
 
-heltal -> 
-input ->
-output ->
+START
+END
+WHILE
+IF
+RETURN
+PLUS
+MINUS
+LPAR
+RPAR
+LBRAC
+RBRAC
+ASSIGN -> =
+EQUAL -> ==
+INPUT.NEXT.LINE()
+System.out.println
 
 
 //recursive descent parsing
