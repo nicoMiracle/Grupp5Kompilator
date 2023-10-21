@@ -57,3 +57,9 @@ ASSIGN -> =
 EQUAL -> ==
 INPUT.NEXT.LINE()
 System.out.println
+
+
+//recursive descent parsing
+// profiler: string + or StringBuilder 
+rekord for name of variable
+tokens som en rekord klass
