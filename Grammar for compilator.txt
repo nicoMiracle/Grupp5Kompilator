@@ -1,4 +1,65 @@
-function-name -> [a-zA-Z][a-zA-Z0-9]*
-variable -> [a-zA-Z_][a-zA-Z0-9_]*
-number -> [0-9]+
-string -> ".*"
+program -> statementList
+statementList -> (statement)*
+statement -> (whileStatement | ifStatement | expressionStatement | declarationStatement | assignStatement | returnStatement
+| blockStatement | inputStatement | outputStatement |methodDeclarationStatement | methodCallStatement)
+
+whileStatement -> "while" "(" expression ")" blockStatement
+ifStatement -> "if" "(" expression ")" blockstatement
+expressionStatement -> expression ";"
+declarationStatement-> (type ID ";") | (type assignStatement )
+assignStatement -> ID "=" expression ";"
+returnStatement -> "return" expression ";"
+blockStatement -> "{" statementList "}"
+methodDeclarationStatement -> type ID "(" ParameterList ")" blockStatement
+methodCallStatement -> ID "(" expression* ")"
+methodCallStatement -> ID "." ID "(" expression* ")"
+
+expression -> term |addition | subtraction | equals
+term -> intLiteral | ID | StringLiteral | expression | methodCallStatement | inputStatement
+
+addition-> expression "+" expression
+subtraction -> expression "-" expression
+equals -> expression "==" expression
+
+inputStatement -> "input" "." "nextLine" "(" ")"
+outputStatement -> "System" "." "out" "." "println" "(" expression ")"
+
+ParameterList -> parameter*
+parameter -> Type ID
+
+intLiteral -> digit+
+StringLiteral -> "(Any character)*"
+type -> ("int" | "string" | "void")
+ID -> StringLiteral
+letter -> (a...z | A...Z)
+digit -> 0...9
+
+//keeping these in
+Equals -> "==" expression
+MoreEq ->  ">=" expression
+LessEq ->  "<=" expression
+Less ->  "<" expression
+More ->  ">" expression
+NotEquals -> "!=" expression
+
+START
+END
+WHILE
+IF
+RETURN
+PLUS
+MINUS
+LPAR
+RPAR
+LBRAC
+RBRAC
+ASSIGN -> =
+EQUAL -> ==
+INPUT.NEXT.LINE()
+System.out.println
+
+
+//recursive descent parsing
+// profiler: string + or StringBuilder 
+rekord for name of variable
+tokens som en rekord klass
