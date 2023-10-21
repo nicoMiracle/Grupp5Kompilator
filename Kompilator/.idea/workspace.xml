@@ -9,11 +9,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38060415-9881-44a2-821f-e5e4fe74b6c6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/JavaLexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/JavaLexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/JavaLexerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/JavaLexerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/JavaLexer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/JavaLexer.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -147,8 +144,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.JavaLexerTest" />
-        <item itemvalue="JUnit.JavaLexerTest.testLexValidInput" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.JavaLexerTest.testLexValidInput" />
         <item itemvalue="JUnit.JavaLexerTest.testGetStringValueWithValidString" />
         <item itemvalue="JUnit.JavaLexerTest.testSystemOutPrintln" />
       </list>
@@ -169,7 +166,7 @@
       <workItem from="1697536926102" duration="58554000" />
       <workItem from="1697746364070" duration="26195000" />
       <workItem from="1697827785492" duration="321000" />
-      <workItem from="1697828115804" duration="4854000" />
+      <workItem from="1697828115804" duration="15957000" />
     </task>
     <servers />
   </component>
