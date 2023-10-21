@@ -2,9 +2,10 @@ package org.example;
 
 public class Code_Generator implements CodeGeneratorVisitor {
     StringBuilder pythonCode = new StringBuilder();
+    private int block = -1;
     public String generateCode(ProgramNode node){
         node.accept(this);
-        return pythonCode.toString();
+        return pythonCode.toString().strip();
     }
 
     @Override
@@ -15,12 +16,15 @@ public class Code_Generator implements CodeGeneratorVisitor {
     @Override
     public void visit(StatementListNode statementListNode) {
         int i = 0;
+        block++;
         for (StatementNode statementNode : statementListNode.getStatementNodes()) {
+            pythonCode.append("   ".repeat(Math.max(0, block)));
             statementNode.accept(this);
             if(i!=statementListNode.getStatementNodes().size()-1){
                 pythonCode.append("\n");
             }
         }
+        block--;
     }
 
     @Override
@@ -30,6 +34,12 @@ public class Code_Generator implements CodeGeneratorVisitor {
         }
         else if (statementNode.getExpressionStatement()!=null){
             statementNode.getExpressionStatement().accept(this);
+        }
+        else if(statementNode.getIfStatement()!= null){
+            statementNode.getIfStatement().accept(this);
+        }
+        else if(statementNode.getWhile()!=null){
+            statementNode.getWhile().accept(this);
         }
     }
 
@@ -50,6 +60,9 @@ public class Code_Generator implements CodeGeneratorVisitor {
         else if(expressionNode.getSubtractionNode()!=null){
             expressionNode.getSubtractionNode().accept(this);
         }
+        else if(expressionNode.getEqualsNode()!=null){
+            expressionNode.getEqualsNode().accept(this);
+        }
     }
 
     @Override
@@ -61,9 +74,7 @@ public class Code_Generator implements CodeGeneratorVisitor {
 
     @Override
     public void visit(ExpressionStatement expressionStatement) {
-        /*
         expressionStatement.getExpression().accept(this);
-         */
     }
 
     @Override
@@ -75,7 +86,9 @@ public class Code_Generator implements CodeGeneratorVisitor {
 
     @Override
     public void visit(EqualsNode equalsNode) {
-
+        equalsNode.getFirstTerm().accept(this);
+        pythonCode.append("==");
+        equalsNode.getSecondTerm().accept(this);
     }
 
     @Override
@@ -89,12 +102,15 @@ public class Code_Generator implements CodeGeneratorVisitor {
 
     @Override
     public void visit(BlockStatement blockStatement) {
-
+        blockStatement.getStatements().accept(this);
     }
 
     @Override
     public void visit(WhileNode whileNode) {
-
+        pythonCode.append("while(");
+        whileNode.getExpression().accept(this);
+        pythonCode.append("):\n");
+        whileNode.getBlockStatement().accept(this);
     }
 
     @Override
@@ -104,7 +120,10 @@ public class Code_Generator implements CodeGeneratorVisitor {
 
     @Override
     public void visit(IfStatement ifStatement) {
-
+        pythonCode.append("if(");
+        ifStatement.getExpression().accept(this);
+        pythonCode.append("):\n");
+        ifStatement.getBlockStatement().accept(this);
     }
 
     @Override
@@ -124,7 +143,30 @@ public class Code_Generator implements CodeGeneratorVisitor {
 
     @Override
     public void visit(MethodCall methodCall) {
-
+        if(methodCall.getExpression()==null&&methodCall.getOptionalID()==null){
+            methodCall.getMethodID().accept(this);
+            pythonCode.append("()");
+        }
+        else if(methodCall.getExpression()==null){
+            methodCall.getOptionalID().accept(this);
+            pythonCode.append(".");
+            methodCall.getMethodID().accept(this);
+            pythonCode.append("()");
+        }
+        else if(methodCall.getExpression()!=null&&methodCall.getOptionalID()!=null){
+            methodCall.getOptionalID().accept(this);
+            pythonCode.append(".");
+            methodCall.getMethodID().accept(this);
+            pythonCode.append("(");
+            methodCall.getExpression().accept(this);
+            pythonCode.append(")");
+        }
+        else if(methodCall.getExpression()!=null&&methodCall.getOptionalID()==null){
+            methodCall.getMethodID().accept(this);
+            pythonCode.append("(");
+            methodCall.getExpression().accept(this);
+            pythonCode.append(")");
+        }
     }
 
     @Override
@@ -152,6 +194,9 @@ public class Code_Generator implements CodeGeneratorVisitor {
         }
         else if(termNode.getIdentifierNode()!=null){
             termNode.getIdentifierNode().accept(this);
+        }
+        else if(termNode.getMethodCall()!=null){
+            termNode.getMethodCall().accept(this);
         }
     }
     @Override

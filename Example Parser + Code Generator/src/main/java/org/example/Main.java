@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {/*
+    public static void main(String[] args) {
+        IntegerLiteralNode x = new IntegerLiteralNode(3);
+        IntegerLiteralNode y = new IntegerLiteralNode(5);
+        /*
         List<Token> tokens = new ArrayList<>();
         tokens.add(new Token(TokenType.IDENTIFIER,"number",1));
         tokens.add(new Token(TokenType.ASSIGN,"=",1));
