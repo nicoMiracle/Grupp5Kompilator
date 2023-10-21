@@ -23,6 +23,7 @@ public class Code_Generator implements CodeGeneratorVisitor {
             if(i!=statementListNode.getStatementNodes().size()-1){
                 pythonCode.append("\n");
             }
+            i++;
         }
         block--;
     }
@@ -40,6 +41,18 @@ public class Code_Generator implements CodeGeneratorVisitor {
         }
         else if(statementNode.getWhile()!=null){
             statementNode.getWhile().accept(this);
+        }
+        else if(statementNode.getDeclaration()!=null){
+            statementNode.getDeclaration().accept(this);
+        }
+        else if(statementNode.getMethodDeclaration()!=null){
+            statementNode.getMethodDeclaration().accept(this);
+        }
+        else if(statementNode.getReturn()!=null){
+            statementNode.getReturn().accept(this);
+        }
+        else if(statementNode.getOutput()!=null){
+            statementNode.getOutput().accept(this);
         }
     }
 
@@ -97,7 +110,10 @@ public class Code_Generator implements CodeGeneratorVisitor {
 
     @Override
     public void visit(DeclarationStatement declarationStatement) {
-
+        if(declarationStatement.getAssignment()!=null){
+            declarationStatement.getType().accept(this);
+            declarationStatement.getAssignment().accept(this);
+        }
     }
 
     @Override
@@ -115,7 +131,8 @@ public class Code_Generator implements CodeGeneratorVisitor {
 
     @Override
     public void visit(ReturnStatement returnStatement) {
-
+        pythonCode.append("return ");
+        returnStatement.getExpression().accept(this);
     }
 
     @Override
@@ -128,19 +145,36 @@ public class Code_Generator implements CodeGeneratorVisitor {
 
     @Override
     public void visit(ParameterListNode parameterListNode) {
-
+        for ( ParameterNode parameter:parameterListNode.getParameterNodes()){
+            parameter.accept(this);
+        }
     }
 
     @Override
     public void visit(ParameterNode parameterNode) {
-
+        parameterNode.getType().accept(this);
+        parameterNode.getID().accept(this);
     }
 
     @Override
     public void visit(MethodDeclarationStatement methodDeclarationStatement) {
-
+        if(methodDeclarationStatement.getParameters()==null){
+            methodDeclarationStatement.getType().accept(this);
+            pythonCode.append("def ");
+            methodDeclarationStatement.getID().accept(this);
+            pythonCode.append("():\n");
+            methodDeclarationStatement.getBlock().accept(this);
+        }
+        else{
+            methodDeclarationStatement.getType().accept(this);
+            pythonCode.append("def ");
+            methodDeclarationStatement.getID().accept(this);
+            pythonCode.append("(");
+            methodDeclarationStatement.getParameters().accept(this);
+            pythonCode.append("):\n");
+            methodDeclarationStatement.getBlock().accept(this);
+        }
     }
-
     @Override
     public void visit(MethodCall methodCall) {
         if(methodCall.getExpression()==null&&methodCall.getOptionalID()==null){
@@ -171,12 +205,14 @@ public class Code_Generator implements CodeGeneratorVisitor {
 
     @Override
     public void visit(InputStatement inputStatement) {
-
+        pythonCode.append("input()");
     }
 
     @Override
     public void visit(OutputStatement outputStatement) {
-
+        pythonCode.append("print(");
+        outputStatement.getExpression().accept(this);
+        pythonCode.append(")");
     }
 
     @Override
@@ -198,6 +234,9 @@ public class Code_Generator implements CodeGeneratorVisitor {
         else if(termNode.getMethodCall()!=null){
             termNode.getMethodCall().accept(this);
         }
+        else if(termNode.getInput()!=null){
+            termNode.getInput().accept(this);
+        }
     }
     @Override
     public void visit(StringLiteralNode stringLiteralNode) {
@@ -214,5 +253,4 @@ public class Code_Generator implements CodeGeneratorVisitor {
     public void visit(IdentifierNode identifierNode) {
         pythonCode.append(identifierNode.getName());
     }
-
 }

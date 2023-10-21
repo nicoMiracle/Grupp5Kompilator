@@ -1,19 +1,18 @@
 program -> statementList
 statementList -> (statement)*
 statement -> (whileStatement | ifStatement | expressionStatement | declarationStatement | assignStatement | returnStatement
-| blockStatement | inputStatement | outputStatement |methodDeclarationStatement | methodCallStatement)
+ | outputStatement | methodDeclarationStatement )
 
 whileStatement -> "while" "(" expression ")" blockStatement
 ifStatement -> "if" "(" expression ")" blockstatement
 expressionStatement -> expression ";"
-declarationStatement-> (type ID ";") | (type assignStatement )
+declarationStatement-> (type ID ";") //if only type and ID, generator ignores | (type assignStatement )
 assignStatement -> ID "=" expression ";"
 returnStatement -> "return" expression ";"
 blockStatement -> "{" statementList "}"
-methodDeclarationStatement -> type ID "(" ParameterList ")" blockStatement
+methodDeclarationStatement -> type ID "(" Parameter ")" blockStatement
 methodCallStatement -> ID "(" expressionList ")"
 methodCallStatement -> ID "." ID "(" expressionList ")"
-ExpressionList -> expression*
 
 expression -> term |addition | subtraction | equals
 term -> intLiteral | ID | StringLiteral | expression | methodCallStatement | inputStatement
@@ -25,7 +24,6 @@ equals -> expression "==" expression
 inputStatement -> "input" "." "nextLine" "(" ")"
 outputStatement -> "System" "." "out" "." "println" "(" expression ")"
 
-ParameterList -> parameter*
 parameter -> Type ID
 
 intLiteral -> digit+

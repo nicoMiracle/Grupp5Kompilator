@@ -2,11 +2,9 @@ package org.example;
 
 public class DeclarationStatement extends Node {
     private final TypeNode typeNode;
-    private IdentifierNode identifierNode;
     private AssignmentStatementNode assignmentStatementNode;
-    public DeclarationStatement(TypeNode typeNode, IdentifierNode identifierNode){
+    public DeclarationStatement(TypeNode typeNode){
         this.typeNode = typeNode;
-        this.identifierNode = identifierNode;
     }
     public DeclarationStatement(TypeNode typeNode, AssignmentStatementNode assignmentStatementNode){
         this.typeNode = typeNode;
@@ -16,9 +14,6 @@ public class DeclarationStatement extends Node {
         return typeNode;
     }
 
-    public IdentifierNode getIdentifierNode() {
-        return identifierNode;
-    }
     public AssignmentStatementNode getAssignment(){
         return assignmentStatementNode;
     }

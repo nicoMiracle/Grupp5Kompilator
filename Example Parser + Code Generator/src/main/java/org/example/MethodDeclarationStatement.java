@@ -3,12 +3,17 @@ package org.example;
 public class MethodDeclarationStatement extends Node {
     private final TypeNode typeNode;
     private final IdentifierNode identifierNode;
-    private final ParameterListNode parameterListNode;
+    private ParameterListNode parameterListNode;
     private final BlockStatement blockStatement;
     public MethodDeclarationStatement(TypeNode typeNode,IdentifierNode identifierNode,ParameterListNode parameterListNode,BlockStatement blockStatement){
         this.typeNode = typeNode;
         this.identifierNode = identifierNode;
         this.parameterListNode = parameterListNode;
+        this.blockStatement = blockStatement;
+    }
+    public MethodDeclarationStatement(TypeNode typeNode,IdentifierNode identifierNode,BlockStatement blockStatement){
+        this.typeNode = typeNode;
+        this.identifierNode = identifierNode;
         this.blockStatement = blockStatement;
     }
     public TypeNode getType(){

@@ -175,32 +175,11 @@ public class NodesTest {
         ExpressionStatement expressionStatement = new ExpressionStatement(expressionNode);
         assertEquals(expressionNode,expressionStatement.getExpression(),"something went wrong");
     }
-    @Test
-    @DisplayName("Test type")
-        void testTypeNode(){
-            TypeNode typeNode = new TypeNode("String");
-            assertEquals("String",typeNode.getType(),"something went wrong");
-    }
-    @Test
-    @DisplayName("Test Declaration Statement type ")
-    void testTypeDeclaration(){
-        TypeNode typeNode = new TypeNode("void");
-        IdentifierNode identifierNode = new IdentifierNode("x");
-        DeclarationStatement declarationStatement = new DeclarationStatement(typeNode,identifierNode);
-        assertEquals(typeNode,declarationStatement.getType(),"something went wrong");
-    }
-    @Test
-    @DisplayName("Test Declaration Statement ID")
-    void testTypeIdentificationDeclaration(){
-        TypeNode typeNode = new TypeNode("void");
-        IdentifierNode identifierNode = new IdentifierNode("x");
-        DeclarationStatement declarationStatement = new DeclarationStatement(typeNode,identifierNode);
-        assertEquals(identifierNode,declarationStatement.getIdentifierNode(),"something went wrong");
-    }
+
     @Test
     @DisplayName("Test declaration statement but with an assignment statement")
     void testDeclarationWithAssignment(){
-        TypeNode typeNode = new TypeNode("void");
+        TypeNode typeNode = new TypeNode();
         IdentifierNode identifierNode = new IdentifierNode("x");
         IntegerLiteralNode integerLiteralNode = new IntegerLiteralNode(5);
         TermNode termNode = new TermNode(integerLiteralNode);
@@ -380,7 +359,7 @@ public class NodesTest {
     @Test
     @DisplayName("Test Method Declaration Statements type")
     void testMethodDeclarationType(){
-        TypeNode typeNode = new TypeNode("String");
+        TypeNode typeNode = new TypeNode();
         IdentifierNode identifierNode = new IdentifierNode("getSomething");
         ParameterListNode parameterList = new ParameterListNode();
         StatementListNode statementListNode = new StatementListNode();
@@ -391,7 +370,7 @@ public class NodesTest {
     @Test
     @DisplayName("Test Method Declaration Statements ID")
     void testMethodDeclarationID(){
-        TypeNode typeNode = new TypeNode("String");
+        TypeNode typeNode = new TypeNode();
         IdentifierNode identifierNode = new IdentifierNode("getSomething");
         ParameterListNode parameterList = new ParameterListNode();
         StatementListNode statementListNode = new StatementListNode();
@@ -402,7 +381,7 @@ public class NodesTest {
     @Test
     @DisplayName("Test Method Declaration Statements ParameterList")
     void testMethodDeclarationParameterList(){
-        TypeNode typeNode = new TypeNode("String");
+        TypeNode typeNode = new TypeNode();
         IdentifierNode identifierNode = new IdentifierNode("getSomething");
         ParameterListNode parameterList = new ParameterListNode();
         StatementListNode statementListNode = new StatementListNode();
@@ -414,7 +393,7 @@ public class NodesTest {
     @Test
     @DisplayName("Test Method Declaration Statements Block Statement")
     void testMethodDeclarationBlockStatement(){
-        TypeNode typeNode = new TypeNode("String");
+        TypeNode typeNode = new TypeNode();
         IdentifierNode identifierNode = new IdentifierNode("getSomething");
         ParameterListNode parameterList = new ParameterListNode();
         StatementListNode statementListNode = new StatementListNode();
@@ -425,7 +404,7 @@ public class NodesTest {
     @Test
     @DisplayName("Test the parameter nodes Type")
     void testParameterNodeType(){
-        TypeNode typeNode = new TypeNode("int");
+        TypeNode typeNode = new TypeNode();
         IdentifierNode identifierNode = new IdentifierNode("number");
         ParameterNode parameterNode = new ParameterNode(typeNode,identifierNode);
         assertEquals(typeNode,parameterNode.getType(),"something went wrong");
@@ -433,7 +412,7 @@ public class NodesTest {
     @Test
     @DisplayName("Test the parameter nodes ID")
     void testParameterNodeID(){
-        TypeNode typeNode = new TypeNode("int");
+        TypeNode typeNode = new TypeNode();
         IdentifierNode identifierNode = new IdentifierNode("number");
         ParameterNode parameterNode = new ParameterNode(typeNode,identifierNode);
         assertEquals(identifierNode,parameterNode.getID(),"something went wrong");
@@ -441,7 +420,7 @@ public class NodesTest {
     @Test
     @DisplayName("Test parameter list node with one parameter")
     void testParameterListWithParameter(){
-        TypeNode typeNode = new TypeNode("int");
+        TypeNode typeNode = new TypeNode();
         IdentifierNode identifierNode = new IdentifierNode("number");
         ParameterNode parameterNode = new ParameterNode(typeNode,identifierNode);
         ParameterListNode parameterListNode= new ParameterListNode();
@@ -479,19 +458,11 @@ public class NodesTest {
         MethodCall methodCall = new MethodCall(stringID,identifierMethod,expressionNode);
         assertEquals(stringID,methodCall.getOptionalID(),"something went wrong");
     }
-    @Test
-    @DisplayName("Test declaration statement in Statement Node")
-    void testDeclarationInStatement(){
-        TypeNode typeNode = new TypeNode("void");
-        IdentifierNode identifierNode = new IdentifierNode("x");
-        DeclarationStatement declarationStatement = new DeclarationStatement(typeNode,identifierNode);
-        StatementNode statementNode = new StatementNode(declarationStatement);
-        assertEquals(declarationStatement,statementNode.getDeclaration(),"something went wrong");
-    }
+
     @Test
     @DisplayName("Test Method Declaration in Statement Node")
     void testMethodDeclarationInStatementNode(){
-        TypeNode typeNode = new TypeNode("String");
+        TypeNode typeNode = new TypeNode();
         IdentifierNode identifierNode = new IdentifierNode("getSomething");
         ParameterListNode parameterList = new ParameterListNode();
         StatementListNode statementListNode = new StatementListNode();
@@ -500,41 +471,6 @@ public class NodesTest {
         StatementNode statementNode = new StatementNode(methodDeclaration);
         assertEquals(methodDeclaration,statementNode.getMethodDeclaration(),"something went wrong");
     }
-    @Test
-    @DisplayName("Test block statement in Statement Node")
-    void testBlockInStatementNode(){
-        IdentifierNode identifierNode = new IdentifierNode("thirty");
-        IntegerLiteralNode integerLiteralNode = new IntegerLiteralNode(30);
-        TermNode termNode = new TermNode(integerLiteralNode);
-        TermNode termNode1 = new TermNode(identifierNode);
-        EqualsNode equalsNode = new EqualsNode(termNode,termNode1);
-        ExpressionNode expressionNode = new ExpressionNode(equalsNode);
-        ExpressionStatement expressionStatement = new ExpressionStatement(expressionNode);
-        StatementNode statementNodeExpression = new StatementNode(expressionStatement);
-        StatementListNode statementListNode = new StatementListNode();
-        statementListNode.addStatement(statementNodeExpression);
-        BlockStatement blockStatement = new BlockStatement(statementListNode);
-        StatementNode statementNode = new StatementNode(blockStatement);
-        assertEquals(blockStatement,statementNode.getBlock(),"something went wrong");
-    }
-    @Test
-    @DisplayName("Test method call statement in Statement node")
-        void testMethodCallInStatement(){
-            IdentifierNode identifierNode = new IdentifierNode("getname");
-            IntegerLiteralNode integerLiteralNode = new IntegerLiteralNode(30);
-            TermNode termNode = new TermNode(integerLiteralNode);
-            ExpressionNode expressionNode = new ExpressionNode(termNode);
-            MethodCall methodCall = new MethodCall(identifierNode,expressionNode);
-            StatementNode statementNode = new StatementNode(methodCall);
-            assertEquals(methodCall,statementNode.getMethodCall(),"something went wrong");
-        }
-        @Test
-    @DisplayName("Test Input Statement in Statement node")
-    void testInputStatementInStatement(){
-        InputStatement inputStatement = new InputStatement();
-        StatementNode statementNode = new StatementNode(inputStatement);
-        assertEquals(inputStatement,statementNode.getInput(),"something went wrong");
-        }
         @Test
     @DisplayName("Test output Statement")
     void testOutputStatement(){

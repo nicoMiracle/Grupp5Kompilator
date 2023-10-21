@@ -1,13 +1,7 @@
 package org.example;
 
 public class TypeNode extends Node{
-    private final String type;
-    public TypeNode(String type){
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
+    public TypeNode(){
     }
 
     @Override
