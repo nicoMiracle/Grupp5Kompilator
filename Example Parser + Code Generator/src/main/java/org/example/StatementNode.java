@@ -8,16 +8,7 @@ public class StatementNode extends Node {
     private ReturnStatement returnStatement;
     private DeclarationStatement declarationStatement;
     private MethodDeclarationStatement methodDeclarationStatement;
-    private BlockStatement blockStatement;
-    private MethodCall methodCall;
-    private InputStatement inputStatement;
     private OutputStatement outputStatement;
-    public StatementNode(MethodCall methodCall){
-        this.methodCall = methodCall;
-    }
-    public StatementNode(BlockStatement blockStatement){
-        this.blockStatement = blockStatement;
-    }
     public StatementNode(MethodDeclarationStatement methodDeclarationStatement){
         this.methodDeclarationStatement = methodDeclarationStatement;
     }
@@ -38,9 +29,6 @@ public class StatementNode extends Node {
     }
     public StatementNode(ReturnStatement returnStatement){
         this.returnStatement = returnStatement;
-    }
-    public StatementNode(InputStatement inputStatement){
-        this.inputStatement = inputStatement;
     }
     public StatementNode(OutputStatement outputStatement){
         this.outputStatement = outputStatement;
@@ -66,15 +54,6 @@ public class StatementNode extends Node {
     }
     public MethodDeclarationStatement getMethodDeclaration(){
         return methodDeclarationStatement;
-    }
-    public BlockStatement getBlock(){
-        return blockStatement;
-    }
-    public MethodCall getMethodCall(){
-        return methodCall;
-    }
-    public InputStatement getInput(){
-        return inputStatement;
     }
     public OutputStatement getOutput(){
         return outputStatement;

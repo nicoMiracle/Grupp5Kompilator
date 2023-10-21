@@ -208,7 +208,7 @@ public class VisitorTest {
         statementListNode.addStatement(statementNodeOut);
         ProgramNode programNode = new ProgramNode(statementListNode);
         Code_Generator code_generator = new Code_Generator();
-        assertEquals("while(x==\"true\"):\n   y=\"false\"\n   z=32\n   b=32+6\n\nx=32",code_generator.generateCode(programNode),"the result was not the one expexted");
+        assertEquals("while(x==\"true\"):\n   y=\"false\"\n   z=32\n   b=32+6\nx=32",code_generator.generateCode(programNode),"the result was not the one expexted");
     }
     @Test
     @DisplayName("Generate an assignment statement where a empty method call is used")
@@ -287,5 +287,141 @@ public class VisitorTest {
         ProgramNode programNode = new ProgramNode(statementListNode);
         Code_Generator code_generator = new Code_Generator();
         assertEquals("x=getAbsolute(x+y)",code_generator.generateCode(programNode),"did not get expected results");
+    }
+    @Test
+    @DisplayName("Generate nothing if a declaration does not have an assignment")
+    void testDeclarationNoAssignment(){
+        TypeNode typeNode = new TypeNode();
+        DeclarationStatement declarationStatement = new DeclarationStatement(typeNode);
+        StatementNode statementNode = new StatementNode(declarationStatement);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("",code_generator.generateCode(programNode),"did not get expected results");
+    }
+    @Test
+    @DisplayName("Generate assignment if a declaration has an assignment")
+    void testDeclarationAssignment(){
+        TypeNode typeNode = new TypeNode();
+        IdentifierNode identifierNode = new IdentifierNode("x");
+        StringLiteralNode stringLiteralNode = new StringLiteralNode("correct");
+        TermNode termNode = new TermNode(stringLiteralNode);
+        ExpressionNode expressionNode = new ExpressionNode(termNode);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode,expressionNode);
+        DeclarationStatement declarationStatement = new DeclarationStatement(typeNode,assignmentStatementNode);
+        StatementNode statementNode = new StatementNode(declarationStatement);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("x=\"correct\"",code_generator.generateCode(programNode),"did not get expected results");
+    }
+    @Test
+    @DisplayName("generate an assignment where x is equal with the input of the user")
+    void testAssignmentInput(){
+        IdentifierNode identifierNode = new IdentifierNode("x");
+        InputStatement inputStatement = new InputStatement();
+        TermNode termNode = new TermNode(inputStatement);
+        ExpressionNode expressionNode = new ExpressionNode(termNode);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode,expressionNode);
+        StatementNode statementNode = new StatementNode(assignmentStatementNode);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("x=input()",code_generator.generateCode(programNode),"did not get expected thing");
+    }
+    @Test
+    @DisplayName("generate a single expression statement 34+5")
+    void testExpressionStatement(){
+        IntegerLiteralNode integerLiteralNode = new IntegerLiteralNode(34);
+        IntegerLiteralNode integerLiteralNode1 = new IntegerLiteralNode(5);
+        TermNode termNode = new TermNode(integerLiteralNode);
+        TermNode termNode1 = new TermNode(integerLiteralNode1);
+        AdditionNode additionNode = new AdditionNode(termNode,termNode1);
+        ExpressionNode expressionNode = new ExpressionNode(additionNode);
+        ExpressionStatement expressionStatement = new ExpressionStatement(expressionNode);
+        StatementNode statementNode = new StatementNode(expressionStatement);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("34+5",code_generator.generateCode(programNode),"did not get expected code");
+    }
+    @Test
+    @DisplayName("Generate a method with no parameters with a return statement at the end")
+    void testGenerateMethodWithReturn(){
+        TypeNode typeNode = new TypeNode();
+        IdentifierNode identifierNode = new IdentifierNode("getAdditionResult");
+        StatementListNode statementListNodeBlock = new StatementListNode();
+        IdentifierNode result = new IdentifierNode("result");
+        IdentifierNode firstTerm = new IdentifierNode("x");
+        IdentifierNode secondTerm = new IdentifierNode("y");
+        TermNode termNode = new TermNode(firstTerm);
+        TermNode termNode1 = new TermNode(secondTerm);
+        AdditionNode additionNode = new AdditionNode(termNode,termNode1);
+        ExpressionNode expressionNode = new ExpressionNode(additionNode);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(result,expressionNode);
+        StatementNode statementNode1 = new StatementNode(assignmentStatementNode);
+        statementListNodeBlock.addStatement(statementNode1);
+        TermNode termNode2 = new TermNode(result);
+        ExpressionNode expressionNode1 = new ExpressionNode(termNode2);
+        ReturnStatement returnStatement = new ReturnStatement(expressionNode1);
+        StatementNode statementNode = new StatementNode(returnStatement);
+        statementListNodeBlock.addStatement(statementNode);
+        BlockStatement blockStatement = new BlockStatement(statementListNodeBlock);
+
+        MethodDeclarationStatement methodDeclarationStatement = new MethodDeclarationStatement(typeNode,identifierNode,blockStatement);
+        StatementNode statementNode2 = new StatementNode(methodDeclarationStatement);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode2);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("def getAdditionResult():\n   result=x+y\n   return result",code_generator.generateCode(programNode),"did not get expected result");
+    }
+    @Test
+    @DisplayName("Generate a method declaration with one parameter")
+    void testGenerateMethodDeclarationOneParameter(){
+        TypeNode typeNode = new TypeNode();
+        IdentifierNode identifierNode = new IdentifierNode("getAdditionResult");
+        StatementListNode statementListNodeBlock = new StatementListNode();
+        IdentifierNode result = new IdentifierNode("result");
+        IdentifierNode firstTerm = new IdentifierNode("x");
+        IdentifierNode secondTerm = new IdentifierNode("y");
+        TermNode termNode = new TermNode(firstTerm);
+        TermNode termNode1 = new TermNode(secondTerm);
+        AdditionNode additionNode = new AdditionNode(termNode,termNode1);
+        ExpressionNode expressionNode = new ExpressionNode(additionNode);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(result,expressionNode);
+        StatementNode statementNode1 = new StatementNode(assignmentStatementNode);
+        statementListNodeBlock.addStatement(statementNode1);
+        TermNode termNode2 = new TermNode(result);
+        ExpressionNode expressionNode1 = new ExpressionNode(termNode2);
+        ReturnStatement returnStatement = new ReturnStatement(expressionNode1);
+        StatementNode statementNode = new StatementNode(returnStatement);
+        statementListNodeBlock.addStatement(statementNode);
+        BlockStatement blockStatement = new BlockStatement(statementListNodeBlock);
+        ParameterNode parameterNode = new ParameterNode(new TypeNode(),new IdentifierNode("x"));
+        ParameterListNode parameterListNode = new ParameterListNode();
+        parameterListNode.addParameter(parameterNode);
+        MethodDeclarationStatement methodDeclarationStatement = new MethodDeclarationStatement(typeNode,identifierNode,parameterListNode,blockStatement);
+        StatementNode statementNode2 = new StatementNode(methodDeclarationStatement);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode2);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("def getAdditionResult(x):\n   result=x+y\n   return result",code_generator.generateCode(programNode),"did not get expected result");
+    }
+    @Test
+    @DisplayName("generate an output statement that prints Hello World")
+    void testOutputHelloWorld(){
+        OutputStatement outputStatement = new OutputStatement(new ExpressionNode(new TermNode(new StringLiteralNode("Hello World"))));
+        StatementNode statementNode = new StatementNode(outputStatement);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("print(\"Hello World\")",code_generator.generateCode(programNode));
     }
 }
