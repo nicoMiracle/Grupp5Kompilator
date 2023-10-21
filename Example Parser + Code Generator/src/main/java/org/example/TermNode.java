@@ -5,6 +5,7 @@ public class TermNode extends Node {
     private StringLiteralNode stringLiteralNode;
     private IdentifierNode identifierNode;
     private ExpressionNode expressionNode;
+    private MethodCall methodCall;
 
     public TermNode(IntegerLiteralNode integerLiteralNode){
         this.integerLiteralNode = integerLiteralNode;
@@ -17,6 +18,9 @@ public class TermNode extends Node {
     }
     public TermNode(ExpressionNode expressionNode){
         this.expressionNode = expressionNode;
+    }
+    public TermNode(MethodCall methodCall){
+        this.methodCall = methodCall;
     }
 
     public IdentifierNode getIdentifierNode() {
@@ -32,6 +36,9 @@ public class TermNode extends Node {
     }
     public StringLiteralNode getStringLiteralNode(){
         return stringLiteralNode;
+    }
+    public MethodCall getMethodCall(){
+        return methodCall;
     }
     public void accept(CodeGeneratorVisitor visitor){
         visitor.visit(this);

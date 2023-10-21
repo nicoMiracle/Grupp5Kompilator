@@ -11,8 +11,9 @@ assignStatement -> ID "=" expression ";"
 returnStatement -> "return" expression ";"
 blockStatement -> "{" statementList "}"
 methodDeclarationStatement -> type ID "(" ParameterList ")" blockStatement
-methodCallStatement -> ID "(" expression* ")"
-methodCallStatement -> ID "." ID "(" expression* ")"
+methodCallStatement -> ID "(" expressionList ")"
+methodCallStatement -> ID "." ID "(" expressionList ")"
+ExpressionList -> expression*
 
 expression -> term |addition | subtraction | equals
 term -> intLiteral | ID | StringLiteral | expression | methodCallStatement | inputStatement

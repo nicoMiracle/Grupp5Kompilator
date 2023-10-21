@@ -2,8 +2,6 @@ package org.example;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class VisitorTest {
@@ -130,8 +128,164 @@ public class VisitorTest {
         assertEquals("x=3+4-5+6-7",code_generator.generateCode(programNode),"it went wrong somewhere");
     }
     @Test
-    @DisplayName("Test making a method call statement with only two parameters")
-    void generateWhileLoopWithOneStatement(){
+    @DisplayName("generate if statement with one expression and one statmeent inside")
+    void generateIfStatementWithOneStatement(){
+        IdentifierNode identifierNode = new IdentifierNode("x");
+        TermNode termNodeIdentifier = new TermNode(identifierNode);
+        StringLiteralNode stringLiteralNode = new StringLiteralNode("true");
+        TermNode termNodeString = new TermNode(stringLiteralNode);
+        EqualsNode equalsNode = new EqualsNode(termNodeIdentifier,termNodeString);
+        ExpressionNode expressionNode = new ExpressionNode(equalsNode);
+        IdentifierNode identifierNode1 = new IdentifierNode("y");
+        StringLiteralNode stringLiteralNode1 = new StringLiteralNode("false");
+        TermNode termNode1 = new TermNode(stringLiteralNode1);
+        ExpressionNode expressionNode1 = new ExpressionNode(termNode1);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode1,expressionNode1);
+        StatementNode statementNode = new StatementNode(assignmentStatementNode);
+        StatementListNode statementListNodeBlock = new StatementListNode();
+        statementListNodeBlock.addStatement(statementNode);
+        BlockStatement blockStatement = new BlockStatement(statementListNodeBlock);
+        IfStatement ifStatement = new IfStatement(expressionNode,blockStatement);
+        StatementListNode statementListNode = new StatementListNode();
+        StatementNode statementNode1 = new StatementNode(ifStatement);
+        statementListNode.addStatement(statementNode1);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("if(x==\"true\"):\n   y=\"false\"",code_generator.generateCode(programNode),"the result was not the one expexted");
+    }
+    @Test
+    @DisplayName("Generate a while loop with one expression and 3 statements inside, as well as another statement outside after")
+    void testWhileMultipleStatements(){
+        IdentifierNode identifierNode = new IdentifierNode("x");
+        TermNode termNodeIdentifier = new TermNode(identifierNode);
+        StringLiteralNode stringLiteralNode = new StringLiteralNode("true");
+        TermNode termNodeString = new TermNode(stringLiteralNode);
+        EqualsNode equalsNode = new EqualsNode(termNodeIdentifier,termNodeString);
+        ExpressionNode expressionNode = new ExpressionNode(equalsNode);
+        IdentifierNode identifierNode1 = new IdentifierNode("y");
+        StringLiteralNode stringLiteralNode1 = new StringLiteralNode("false");
+        TermNode termNode1 = new TermNode(stringLiteralNode1);
+        ExpressionNode expressionNode1 = new ExpressionNode(termNode1);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode1,expressionNode1);
+        StatementNode statementNode = new StatementNode(assignmentStatementNode);
+        StatementListNode statementListNodeBlock = new StatementListNode();
 
+        IdentifierNode identifierNodeZ = new IdentifierNode("z");
+        IntegerLiteralNode integerLiteralNode = new IntegerLiteralNode(32);
+        TermNode termNodeInt = new TermNode(integerLiteralNode);
+        ExpressionNode expressionNode2 = new ExpressionNode(termNodeInt);
+        AssignmentStatementNode assignmentStatementNode1 = new AssignmentStatementNode(identifierNodeZ, expressionNode2);
+        StatementNode statementNode1 = new StatementNode(assignmentStatementNode1);
+
+        IdentifierNode identifierNodeB = new IdentifierNode("b");
+        IntegerLiteralNode integerLiteralNode1 = new IntegerLiteralNode(32);
+        TermNode termNodeInt2 = new TermNode(integerLiteralNode1);
+        IntegerLiteralNode integerLiteralNode2 = new IntegerLiteralNode(6);
+        TermNode termNodeInt3 = new TermNode(integerLiteralNode2);
+        ExpressionNode expressionNode3 = new ExpressionNode(termNodeInt2);
+        ExpressionNode expressionNode4 = new ExpressionNode(termNodeInt3);
+        TermNode termNodeExpression = new TermNode(expressionNode3);
+        TermNode termNodeExpression2= new TermNode(expressionNode4);
+        AdditionNode additionNode = new AdditionNode(termNodeExpression,termNodeExpression2);
+        ExpressionNode expressionNode5 = new ExpressionNode(additionNode);
+        AssignmentStatementNode assignmentStatementNode2 = new AssignmentStatementNode(identifierNodeB,expressionNode5);
+        StatementNode statementNode2 = new StatementNode(assignmentStatementNode2);
+
+        statementListNodeBlock.addStatement(statementNode);
+        statementListNodeBlock.addStatement(statementNode1);
+        statementListNodeBlock.addStatement(statementNode2);
+        BlockStatement blockStatement = new BlockStatement(statementListNodeBlock);
+        WhileNode whileNode = new WhileNode(expressionNode,blockStatement);
+        StatementListNode statementListNode = new StatementListNode();
+        IdentifierNode identifierNodeOut = new IdentifierNode("x");
+        IntegerLiteralNode integerLiteralNodeOut = new IntegerLiteralNode(32);
+        TermNode termNode = new TermNode(integerLiteralNodeOut);
+        ExpressionNode expressionNodeOut = new ExpressionNode(termNode);
+        AssignmentStatementNode assignmentStatementNodeOut = new AssignmentStatementNode(identifierNodeOut,expressionNodeOut);
+        StatementNode statementNodeOut = new StatementNode(assignmentStatementNodeOut);
+        StatementNode statementNode3 = new StatementNode(whileNode);
+        statementListNode.addStatement(statementNode3);
+        statementListNode.addStatement(statementNodeOut);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("while(x==\"true\"):\n   y=\"false\"\n   z=32\n   b=32+6\n\nx=32",code_generator.generateCode(programNode),"the result was not the one expexted");
+    }
+    @Test
+    @DisplayName("Generate an assignment statement where a empty method call is used")
+    void testGenerateAssignmentMethodCall(){
+        IdentifierNode identifierNodeOut = new IdentifierNode("x");
+        IdentifierNode identifierNode = new IdentifierNode("getName");
+        MethodCall methodCall = new MethodCall(identifierNode);
+        TermNode termNode = new TermNode(methodCall);
+        ExpressionNode expressionNode = new ExpressionNode(termNode);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNodeOut,expressionNode);
+        StatementNode statementNode = new StatementNode(assignmentStatementNode);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("x=getName()",code_generator.generateCode(programNode),"did not get expected results");
+    }
+    @Test
+    @DisplayName("Generate an assignment where an empty method call from another object is used")
+    void testGenerateAssignmentObjectFunctionCall(){
+        IdentifierNode identifierNodeOut = new IdentifierNode("x");
+        IdentifierNode identifierNode = new IdentifierNode("getName");
+        IdentifierNode identifierNode1 = new IdentifierNode("Object");
+        MethodCall methodCall = new MethodCall(identifierNode1,identifierNode);
+        TermNode termNode = new TermNode(methodCall);
+        ExpressionNode expressionNode = new ExpressionNode(termNode);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNodeOut,expressionNode);
+        StatementNode statementNode = new StatementNode(assignmentStatementNode);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("x=Object.getName()",code_generator.generateCode(programNode),"did not get expected results");
+    }
+    @Test
+    @DisplayName("Generate an assignment where one parameters are used in a method call from an object")
+    void testGenerateAssignmentParametersMethodCall(){
+        IdentifierNode identifierNode3 = new IdentifierNode("x");
+        IdentifierNode identifierNode = new IdentifierNode("x");
+        IdentifierNode identifierNode1 = new IdentifierNode("y");
+        TermNode termNode = new TermNode(identifierNode);
+        TermNode termNode1 = new TermNode(identifierNode1);
+        AdditionNode additionNode = new AdditionNode(termNode,termNode1);
+        ExpressionNode expressionNode = new ExpressionNode(additionNode);
+        IdentifierNode identifierNode2 = new IdentifierNode("Math");
+        IdentifierNode identifierNode4 = new IdentifierNode("getAbsolute");
+        MethodCall methodCall = new MethodCall(identifierNode2,identifierNode4,expressionNode);
+        TermNode termNode2 = new TermNode(methodCall);
+        ExpressionNode expressionNode1 = new ExpressionNode(termNode2);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode3,expressionNode1);
+        StatementNode statementNode = new StatementNode(assignmentStatementNode);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("x=Math.getAbsolute(x+y)",code_generator.generateCode(programNode),"did not get expected results");
+    }
+    @Test
+    @DisplayName("Generate an assignment with a method with a parameter but not from an object")
+    void testGenerateAssignmentNoObject(){
+        IdentifierNode identifierNode3 = new IdentifierNode("x");
+        IdentifierNode identifierNode = new IdentifierNode("x");
+        IdentifierNode identifierNode1 = new IdentifierNode("y");
+        TermNode termNode = new TermNode(identifierNode);
+        TermNode termNode1 = new TermNode(identifierNode1);
+        AdditionNode additionNode = new AdditionNode(termNode,termNode1);
+        ExpressionNode expressionNode = new ExpressionNode(additionNode);
+        IdentifierNode identifierNode4 = new IdentifierNode("getAbsolute");
+        MethodCall methodCall = new MethodCall(identifierNode4,expressionNode);
+        TermNode termNode2 = new TermNode(methodCall);
+        ExpressionNode expressionNode1 = new ExpressionNode(termNode2);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode3,expressionNode1);
+        StatementNode statementNode = new StatementNode(assignmentStatementNode);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("x=getAbsolute(x+y)",code_generator.generateCode(programNode),"did not get expected results");
     }
 }
