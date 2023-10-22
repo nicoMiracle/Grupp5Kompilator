@@ -28,7 +28,7 @@ public class JavaLexer {
         while (j < text.length() && text.charAt(j) != '"') {
             j++;
         }
-        return text.substring(i + 1, j);
+        return text.substring(i + 1, j).trim(); // Trim removes leading and trailing spaces.
     }
     private String getSequenceOfLettersOrNumbers(String text, int i) {
         int j = i;
