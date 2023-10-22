@@ -1,18 +1,17 @@
 program -> statementList
 statementList -> (statement)*
-statement -> (whileStatement | ifStatement | expressionStatement | declarationStatement | assignStatement | returnStatement
-| blockStatement | inputStatement | outputStatement |methodDeclarationStatement | methodCallStatement)
+statement -> (whileStatement | ifStatement |  declarationStatement | assignStatement | returnStatement
+ | outputStatement | methodDeclarationStatement | methodCallStatemenr )
 
 whileStatement -> "while" "(" expression ")" blockStatement
 ifStatement -> "if" "(" expression ")" blockstatement
-expressionStatement -> expression ";"
-declarationStatement-> (type ID ";") | (type assignStatement )
+declarationStatement-> type assignStatement
 assignStatement -> ID "=" expression ";"
 returnStatement -> "return" expression ";"
 blockStatement -> "{" statementList "}"
-methodDeclarationStatement -> type ID "(" ParameterList ")" blockStatement
-methodCallStatement -> ID "(" expression* ")"
-methodCallStatement -> ID "." ID "(" expression* ")"
+methodDeclarationStatement -> type ID "(" Parameter ")" blockStatement
+methodCallStatement -> ID "(" expression ")"
+methodCallStatement -> ID "." ID "(" expression ")"
 
 expression -> term |addition | subtraction | equals
 term -> intLiteral | ID | StringLiteral | expression | methodCallStatement | inputStatement
@@ -24,7 +23,6 @@ equals -> expression "==" expression
 inputStatement -> "input" "." "nextLine" "(" ")"
 outputStatement -> "System" "." "out" "." "println" "(" expression ")"
 
-ParameterList -> parameter*
 parameter -> Type ID
 
 intLiteral -> digit+
@@ -52,6 +50,17 @@ MINUS
 LPAR
 RPAR
 LBRAC
+RBRAC
+ASSIGN -> =
+EQUAL -> ==
+INPUT.NEXT.LINE()
+System.out.println
+
+
+//recursive descent parsing
+// profiler: string + or StringBuilder 
+rekord for name of variable
+tokens som en rekord klass
 RBRAC
 ASSIGN -> =
 EQUAL -> ==
