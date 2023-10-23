@@ -1,117 +1,98 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JavaLexer {
     private DefaultLexerErrorListener listener;
-
+    private Map<Character, TokenType> charTokenMap = new HashMap<>();
+    public JavaLexer() {
+        charTokenMap.put('{', TokenType.LBRACE);
+        charTokenMap.put('}', TokenType.RBRACE);
+        charTokenMap.put('(', TokenType.LPAREN);
+        charTokenMap.put(')', TokenType.RPAREN);
+        charTokenMap.put('=', TokenType.ASSIGN);
+        charTokenMap.put('+', TokenType.PLUS);
+        charTokenMap.put('-', TokenType.MINUS);
+        charTokenMap.put(';', TokenType.EOF);
+        charTokenMap.put(',', TokenType.COMMA);
+        charTokenMap.put('.', TokenType.DOT);
+    }
     public void setListener(DefaultLexerErrorListener listener) {
         this.listener = listener;
     }
-
-    protected String getAtom(String text, int i) {
+    private String getTextBetweenQuotation(String text, int i) {
+        int j = i + 1;
+        while (j < text.length() && text.charAt(j) != '"') {
+            j++;
+        }
+        return text.substring(i + 1, j).trim(); // Trim removes leading and trailing spaces.
+    }
+    private String getSequenceOfLetters(String text, int i) {
         int j = i;
-        while (j < text.length() && (Character.isLetter(text.charAt(j)) || Character.isDigit(text.charAt(j)))) {
+        while (j < text.length() && (Character.isLetter(text.charAt(j)))) {
             j++;
         }
         return text.substring(i, j);
     }
-    public String getTextBetweenQuotation(String text, int i) {
+    private String getSequenceOfNumbers(String text, int i) {
         int j = i;
-        do{
+        while (j < text.length() && (Character.isDigit(text.charAt(j)))) {
             j++;
-        }while(j < text.length() && text.charAt(j)!='"');
-        int positionsSkipped = 1;
-        return text.substring(i+positionsSkipped, j);
+        }
+        return text.substring(i, j);
     }
-
     public List<Token> lex(String input) {
         List<Token> tokenList = new ArrayList<>();
         int currentPosition = 0;
-        int lineNumber=1;
+        int lineNumber = 1;
+
         while (currentPosition < input.length()) {
             char currentChar = input.charAt(currentPosition);
-            switch (currentChar) {
-                case '{':
-                    tokenList.add(new Token(TokenType.LBRACE, "{", lineNumber));
-                    currentPosition++;
-                    break;
-                case '}':
-                    tokenList.add(new Token(TokenType.RBRACE, "}", lineNumber));
-                    currentPosition++;
-                    break;
-                case '(':
-                    tokenList.add(new Token(TokenType.LPAREN, "(", lineNumber));
-                    currentPosition++;
-                    break;
-                case ')':
-                    tokenList.add(new Token(TokenType.RPAREN, ")",lineNumber));
-                    currentPosition++;
-                    break;
-                case '=':
-                    int nextCharPosition = currentPosition+1;
-                    if(input.charAt(nextCharPosition)=='='){
-                        tokenList.add(new Token(TokenType.EQUAL, "==",lineNumber));
-                        int positionsSkipped = 2;
-                        currentPosition+=positionsSkipped;
-                        break;
-                    }
-                    tokenList.add(new Token(TokenType.ASSIGN, "=",lineNumber));
-                    currentPosition++;
-                    break;
-                case '+':
-                    tokenList.add(new Token(TokenType.PLUS, "+",lineNumber));
-                    currentPosition++;
-                    break;
-                case '-':
-                    tokenList.add(new Token(TokenType.MINUS, "-",lineNumber));
-                    currentPosition++;
-                    break;
-                case ';':
-                    tokenList.add(new Token(TokenType.EOF, ";",lineNumber));
-                    lineNumber++;
-                    currentPosition++;
-                    break;
-                case ',':
-                    tokenList.add(new Token(TokenType.COMMA, ",",lineNumber));
-                    currentPosition++;
-                    break;
-                case '.':
-                    tokenList.add(new Token(TokenType.DOT, ".",lineNumber));
-                    currentPosition++;
-                    break;
-                case ' ':
-                    currentPosition++;
-                    break;
-                case '"':
-                    String stringValue = getTextBetweenQuotation(input,currentPosition);
-                    tokenList.add(new Token(TokenType.STRING_LITERAL, stringValue,lineNumber));
-                    int positionsSkipped = 2;
-                    currentPosition += stringValue.length()+positionsSkipped;
-                    break;
-                default:
-                    if (Character.isDigit(currentChar)) {
-                        String number = getAtom(input, currentPosition);
-                        currentPosition += number.length();
-                        tokenList.add(new Token(TokenType.INTEGER_LITERAL, number,lineNumber));
-                    } else if (Character.isLetter(currentChar)) {
-                        String atom = getAtom(input, currentPosition);
-                        currentPosition += atom.length();
-                        switch (atom) {
-                            case "int" -> tokenList.add(new Token(TokenType.TYPE_INT, atom, lineNumber));
-                            case "String" -> tokenList.add(new Token(TokenType.TYPE_STRING, atom, lineNumber));
-                            case "if" -> tokenList.add(new Token(TokenType.IF, atom, lineNumber));
-                            case "while" -> tokenList.add(new Token(TokenType.WHILE, atom, lineNumber));
-                            case "return" -> tokenList.add(new Token(TokenType.FUNCTION_RETURN, atom, lineNumber));
-                            default -> tokenList.add(new Token(TokenType.IDENTIFIER, atom, lineNumber));
-                        }
-                    }else{
-                        char invalidChar = input.charAt(currentPosition);
-                        String errorMessage = "Unrecognized character: '" + invalidChar + "'";
-                        listener.lexicalError(errorMessage,lineNumber);
+            if (Character.isWhitespace(currentChar)) {
+                currentPosition++;
+                continue;
+            }
+            if (charTokenMap.containsKey(currentChar)) {
+                TokenType tokenType = charTokenMap.get(currentChar);
+                String tokenValue = String.valueOf(currentChar);
+                if (tokenType == TokenType.ASSIGN) {
+                    int nextCharPosition = currentPosition + 1;
+                    if (nextCharPosition < input.length() && input.charAt(nextCharPosition) == '=') {
+                        tokenType = TokenType.EQUAL;
+                        tokenValue = "==";
                         currentPosition++;
                     }
+                }
+                tokenList.add(new Token(tokenType, tokenValue, lineNumber));
+                currentPosition++;
+                if (tokenType==TokenType.EOF) {
+                    lineNumber++;
+                }
+            } else if (currentChar == '"') {
+                String stringValue = getTextBetweenQuotation(input, currentPosition);
+                tokenList.add(new Token(TokenType.STRING_LITERAL, stringValue, lineNumber));
+                currentPosition += stringValue.length() + 2; // Skip past the string and both double quotes
+            } else if (Character.isDigit(currentChar)) {
+                String number = getSequenceOfNumbers(input, currentPosition);
+                currentPosition += number.length();
+                tokenList.add(new Token(TokenType.INTEGER_LITERAL, number, lineNumber));
+            } else if (Character.isLetter(currentChar)) {
+                String letter = getSequenceOfLetters(input, currentPosition);
+                currentPosition += letter.length();
+                switch (letter) {
+                    case "int" -> tokenList.add(new Token(TokenType.TYPE_INT, letter, lineNumber));
+                    case "String" -> tokenList.add(new Token(TokenType.TYPE_STRING, letter, lineNumber));
+                    case "if" -> tokenList.add(new Token(TokenType.IF, letter, lineNumber));
+                    case "while" -> tokenList.add(new Token(TokenType.WHILE, letter, lineNumber));
+                    case "return" -> tokenList.add(new Token(TokenType.FUNCTION_RETURN, letter, lineNumber));
+                    default -> tokenList.add(new Token(TokenType.IDENTIFIER, letter, lineNumber));
+                }
+            } else {
+                listener.lexicalError("Unrecognized character: '" + currentChar + "'", lineNumber);
+                currentPosition++;
             }
         }
         return tokenList;

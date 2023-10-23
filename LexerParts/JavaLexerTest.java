@@ -1,23 +1,80 @@
 package org.example;
 
 import org.hamcrest.collection.IsIterableContainingInOrder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JavaLexerTest {
     private JavaLexer lexer;
+    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+    private final PrintStream originalErr = System.err;
 
     @BeforeEach
     void setUp() {
         lexer = new JavaLexer();
+        System.setErr(new PrintStream(errContent));
+    }
+    @AfterEach
+    public void restoreStreams() {
+        System.setErr(originalErr);
     }
 
+    @Test
+    public void testGetTextBetweenQuotation() throws Exception {
+        Method method = JavaLexer.class.getDeclaredMethod("getTextBetweenQuotation", String.class, int.class);
+        method.setAccessible(true);
+
+        String input1 = "This is a \"test\".";
+        String expected1 = "test";
+        assertEquals(expected1, method.invoke(lexer, input1, 10));
+
+        String input2 = "This is an empty \"\" string.";
+        String expected2 = "";
+        assertEquals(expected2, method.invoke(lexer, input2, 15));
+
+        String input3 = "This is an unclosed \"string.";
+        String expected3 = "string.";
+        assertEquals(expected3, method.invoke(lexer, input3, 20));
+
+        String input4 = "This is a \"test with 'nested' quotes\".";
+        String expected4 = "test with 'nested' quotes";
+        assertEquals(expected4, method.invoke(lexer, input4, 10));
+
+        String input5 = "quote at the end \"";
+        String expected5 = "";
+        assertEquals(expected5, method.invoke(lexer, input5, 16));
+    }
+    @Test
+    public void testUnrecognizedCharacter() {
+        DefaultLexerErrorListener listener = new DefaultLexerErrorListener();
+        lexer.setListener(listener);
+        String input = "x = y#z";
+        int lineNumber = 1;
+        String expectedErrorMessage = "Unrecognized character: '#' at line: " + lineNumber +'\n';
+        lexer.lex(input);
+        assertEquals(expectedErrorMessage, errContent.toString());
+    }
+
+
+    @Test
+    public void testEmptyStringLex() {
+        JavaLexer lexer = new JavaLexer();
+        String input = "";
+
+        List<Token> tokens = lexer.lex(input);
+
+        assertTrue(tokens.isEmpty());
+    }
     @Test
     public void testEmptyStringAssignment() {
         JavaLexer lexer = new JavaLexer();
