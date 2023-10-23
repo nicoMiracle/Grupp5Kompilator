@@ -4,9 +4,10 @@ public class TermNode {
     private IntegerLiteralNode integerLiteralNode;
     private StringLiteralNode stringLiteralNode;
     private IdentifierNode identifierNode;
-    private ExpressionNode expressionNode;
     private MethodCall methodCall;
     private InputStatement inputStatement;
+    private NegativeTerm negativeTerm;
+    private PositiveTermNode positiveTermNode;
 
     public TermNode(IntegerLiteralNode integerLiteralNode) {
         this.integerLiteralNode = integerLiteralNode;
@@ -20,9 +21,6 @@ public class TermNode {
         this.identifierNode = identifierNode;
     }
 
-    public TermNode(ExpressionNode expressionNode) {
-        this.expressionNode = expressionNode;
-    }
 
     public TermNode(InputStatement inputStatement) {
         this.inputStatement = inputStatement;
@@ -31,13 +29,15 @@ public class TermNode {
     public TermNode(MethodCall methodCall) {
         this.methodCall = methodCall;
     }
+    public TermNode(PositiveTermNode termNode){
+        this.positiveTermNode = termNode;
+    }
+    public TermNode(NegativeTerm termNode){
+        this.negativeTerm = termNode;
+    }
 
     public IdentifierNode getIdentifierNode() {
         return identifierNode;
-    }
-
-    public ExpressionNode getExpressionNode() {
-        return expressionNode;
     }
 
     public IntegerLiteralNode getIntegerLiteralNode() {
@@ -54,6 +54,12 @@ public class TermNode {
 
     public InputStatement getInput() {
         return inputStatement;
+    }
+    public PositiveTermNode getPositiveTermNode(){
+        return positiveTermNode;
+    }
+    public NegativeTerm getNegativeTerm(){
+        return negativeTerm;
     }
 
     public void accept(CodeGeneratorVisitor visitor) {
