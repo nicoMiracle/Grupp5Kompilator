@@ -30,9 +30,16 @@ public class JavaLexer {
         }
         return text.substring(i + 1, j).trim(); // Trim removes leading and trailing spaces.
     }
-    private String getSequenceOfLettersOrNumbers(String text, int i) {
+    private String getSequenceOfLetters(String text, int i) {
         int j = i;
-        while (j < text.length() && (Character.isLetter(text.charAt(j)) || Character.isDigit(text.charAt(j)))) {
+        while (j < text.length() && (Character.isLetter(text.charAt(j)))) {
+            j++;
+        }
+        return text.substring(i, j);
+    }
+    private String getSequenceOfNumbers(String text, int i) {
+        int j = i;
+        while (j < text.length() && (Character.isDigit(text.charAt(j)))) {
             j++;
         }
         return text.substring(i, j);
@@ -69,11 +76,11 @@ public class JavaLexer {
                 tokenList.add(new Token(TokenType.STRING_LITERAL, stringValue, lineNumber));
                 currentPosition += stringValue.length() + 2; // Skip past the string and both double quotes
             } else if (Character.isDigit(currentChar)) {
-                String number = getSequenceOfLettersOrNumbers(input, currentPosition);
+                String number = getSequenceOfNumbers(input, currentPosition);
                 currentPosition += number.length();
                 tokenList.add(new Token(TokenType.INTEGER_LITERAL, number, lineNumber));
             } else if (Character.isLetter(currentChar)) {
-                String letter = getSequenceOfLettersOrNumbers(input, currentPosition);
+                String letter = getSequenceOfLetters(input, currentPosition);
                 currentPosition += letter.length();
                 switch (letter) {
                     case "int" -> tokenList.add(new Token(TokenType.TYPE_INT, letter, lineNumber));
