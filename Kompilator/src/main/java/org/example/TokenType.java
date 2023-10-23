@@ -2,13 +2,6 @@
 package org.example;
 
 public enum TokenType {
-    // Keywords
-    KEYWORD_IF,
-    KEYWORD_ELSE,
-    KEYWORD_WHILE,
-    KEYWORD_FUNCTION,
-    KEYWORD_RETURN,
-
     // Types
     TYPE_INT,
     TYPE_STRING,
@@ -21,10 +14,7 @@ public enum TokenType {
     // Operators
     PLUS,         // Addition
     MINUS,        // Subtraction
-    MULTIPLY,     // Multiplication
-    DIVIDE,       // Division
     ASSIGN,       // Assignment (=)
-    CONCATENATE,  // String Concatenation
     EQUAL,        // Equality (==)
     NOT_EQUAL,    // Inequality (!=)
     LESS_THAN,    // Less Than (<)
@@ -42,14 +32,13 @@ public enum TokenType {
 
     // Control Flow
     CONTROL_IF,
-    CONTROL_ELSE,
     CONTROL_WHILE,
 
     // Function Control
     FUNCTION_DECLARATION,
     FUNCTION_RETURN,
 
-    // End of File
-    EOF
+    SYSTEM, // End of File
+    DOT, OUT, PRINT, INPUT, NEXTLINE
 }
 

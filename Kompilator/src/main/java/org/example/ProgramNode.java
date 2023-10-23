@@ -1,53 +1,17 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ProgramNode {
+    private final StatementListNode statements;
 
-public class ProgramNode extends ASTNode {
-    private List<VariableDeclarationNode> declarations;
-    private List<StatementNode> statements;
-    private List<ExpressionNode> expressions;
-
-    public ProgramNode() {
-        declarations = new ArrayList<>();
-        statements = new ArrayList<>();
-        expressions = new ArrayList<>();
+    ProgramNode(StatementListNode statements) {
+        this.statements = statements;
     }
 
-    public List<VariableDeclarationNode> getDeclarations() {
-        return declarations;
-    }
-
-    public List<StatementNode> getStatements() {
+    public StatementListNode getStatements() {
         return statements;
     }
 
-    public List<ExpressionNode> getExpressions() {
-        return expressions;
-    }
-
-    public void addDeclaration(VariableDeclarationNode declaration) {
-        declarations.add(declaration);
-    }
-
-    public void addStatement(StatementNode statement) {
-        statements.add(statement);
-    }
-
-    @Override
-    public void accept(ASTVisitor visitor) {
+    public void accept(CodeGeneratorVisitor visitor) {
         visitor.visit(this);
-        for (VariableDeclarationNode declaration : declarations) {
-            declaration.accept(visitor);
-        }
-        for (StatementNode statement : statements) {
-            statement.accept(visitor);
-        }
-
-        for (ExpressionNode expression : expressions) {
-            expression.accept(visitor);
-        }
     }
 }
-
-
