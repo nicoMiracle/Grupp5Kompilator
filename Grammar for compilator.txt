@@ -13,8 +13,11 @@ methodDeclarationStatement -> type ID "(" Parameter ")" blockStatement
 methodCallStatement -> ID "(" expression ")"
 methodCallStatement -> ID "." ID "(" expression ")"
 
-expression -> term | equals
-term -> intLiteral | ID | StringLiteral | expression | methodCallStatement | inputStatement ||addition | subtraction |
+expression -> termList | equals 
+termList -> term*
+term >= intLiteral | ID | StringLiteral | methodCallStatement | inputStatement | positive term | negative term
+positive term -> +term
+negative term -> -term
 
 addition-> term "+" term
 subtraction -> term "-" term
