@@ -15,7 +15,9 @@ public class Main {
 //        String input7 = "x = y.getInt();";
 //        String input8 = "System.out.println() ;";
 //        String input9 = "int b = 45abs";
-        List<Token> tokens = lexer.lex(input);
+        String input10 = "This is an unclosed \"string.";
+        String input11 = "";
+        List<Token> tokens = lexer.lex(input11);
 
         // Print the tokens
         for (Token token : tokens) {
