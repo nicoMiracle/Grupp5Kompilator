@@ -1,7 +1,7 @@
 package org.example;
 import java.util.List;
 
-public class Parser {
+/*public class Parser {
     private final List<Token> tokens;
     private int position;
 
@@ -36,6 +36,7 @@ public class Parser {
             position++;
             if(tokens.get(position).type().equals(TokenType.ASSIGN)){
                 position++;
+                System.out.println("here");
                 return new StatementNode(parseAssignmentStatementNode(identifier));
             }
         }else if(tokens.get(position).type().equals(TokenType.TYPE_INT) || tokens.get(position).type().equals(TokenType.TYPE_STRING)){
@@ -129,11 +130,11 @@ public class Parser {
             return new DeclarationStatement(assign);
         }
         return null;
+
     }
 
     public AssignmentStatementNode parseAssignmentStatementNode(String identifier){
         IdentifierNode identifierNode = parseIdentifierNode(identifier);
-
         if(tokens.get(position).type().equals(TokenType.INTEGER_LITERAL)
                 || tokens.get(position).type().equals(TokenType.STRING_LITERAL)
                 || tokens.get(position).type().equals(TokenType.IDENTIFIER)) {
@@ -229,7 +230,7 @@ public class Parser {
             } else {
                 binaryExpression = new ExpressionNode(new SubtractionNode(leftTerm, rightTerm));
             }
-            leftTerm = binaryExpression.getTermNode();
+            leftTerm = binaryExpression.getTermList();
         }
 
         match(TokenType.SEMICOLON);
@@ -294,7 +295,7 @@ public class Parser {
             throw new ParseException("Expected " + expectedType + " but found " + token.type()+ " on line " + token.line());
         }
     }
-}
+}*/
 
 
 

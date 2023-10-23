@@ -60,29 +60,11 @@ public class Code_Generator implements CodeGeneratorVisitor {
 
     @Override
     public void visit(ExpressionNode expressionNode) {
-        if (expressionNode.getTermNode() != null) {
-            expressionNode.getTermNode().accept(this);
-        } else if (expressionNode.getAdditionNode() != null) {
-            expressionNode.getAdditionNode().accept(this);
-        } else if (expressionNode.getSubtractionNode() != null) {
-            expressionNode.getSubtractionNode().accept(this);
+        if (expressionNode.getTermList() != null) {
+            expressionNode.getTermList().accept(this);
         } else if (expressionNode.getEqualsNode() != null) {
             expressionNode.getEqualsNode().accept(this);
         }
-    }
-
-    @Override
-    public void visit(AdditionNode additionNode) {
-        additionNode.getFirstTermNode().accept(this);
-        pythonCode.append("+");
-        additionNode.getSecondTermNode().accept(this);
-    }
-
-    @Override
-    public void visit(SubtractionNode subtractionNode) {
-        subtractionNode.getFirstTermNode().accept(this);
-        pythonCode.append("-");
-        subtractionNode.getSecondTermNode().accept(this);
     }
 
     @Override
@@ -191,20 +173,44 @@ public class Code_Generator implements CodeGeneratorVisitor {
     }
 
     @Override
-    public void visit(TermNode termNode) {
+    public void visit(TermList termList) {
+        for(TermNode termNode:termList.terms){
+            termNode.accept(this);
+        }
+    }
 
+    @Override
+    public void visit(PositiveTermNode positiveTermNode) {
+        pythonCode.append("+");
+        if(positiveTermNode.getIntegerLiteralNode()!=null){
+            positiveTermNode.getIntegerLiteralNode().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(NegativeTerm negativeTerm) {
+        pythonCode.append("-");
+        if(negativeTerm.getIntegerLiteralNode()!=null){
+            negativeTerm.getIntegerLiteralNode().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(TermNode termNode) {
         if (termNode.getIntegerLiteralNode() != null) {
             termNode.getIntegerLiteralNode().accept(this);
         } else if (termNode.getStringLiteralNode() != null) {
             termNode.getStringLiteralNode().accept(this);
-        } else if (termNode.getExpressionNode() != null) {
-            termNode.getExpressionNode().accept(this);
         } else if (termNode.getIdentifierNode() != null) {
             termNode.getIdentifierNode().accept(this);
         } else if (termNode.getMethodCall() != null) {
             termNode.getMethodCall().accept(this);
         } else if (termNode.getInput() != null) {
             termNode.getInput().accept(this);
+        }else if(termNode.getPositiveTermNode()!=null){
+            termNode.getPositiveTermNode().accept(this);
+        }else if(termNode.getNegativeTerm()!=null){
+            termNode.getNegativeTerm().accept(this);
         }
     }
 

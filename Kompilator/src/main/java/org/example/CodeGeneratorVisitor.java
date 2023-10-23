@@ -19,11 +19,6 @@ public interface CodeGeneratorVisitor {
 
     void visit(ExpressionNode expressionNode);
 
-    void visit(AdditionNode additionNode);
-
-
-    void visit(SubtractionNode subtractionNode);
-
     void visit(EqualsNode equalsNode);
 
     void visit(DeclarationStatement declarationStatement);
@@ -47,4 +42,10 @@ public interface CodeGeneratorVisitor {
     void visit(InputStatement inputStatement);
 
     void visit(OutputStatement outputStatement);
+
+    void visit(TermList termList);
+
+    void visit(PositiveTermNode positiveTermNode);
+
+    void visit(NegativeTerm negativeTerm);
 }
