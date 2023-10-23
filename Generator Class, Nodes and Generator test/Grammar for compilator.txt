@@ -1,7 +1,7 @@
 program -> statementList
 statementList -> (statement)*
 statement -> (whileStatement | ifStatement |  declarationStatement | assignStatement | returnStatement
- | outputStatement | methodDeclarationStatement | methodCallStatemenr )
+ | outputStatement | methodDeclarationStatement, method call statement )
 
 whileStatement -> "while" "(" expression ")" blockStatement
 ifStatement -> "if" "(" expression ")" blockstatement
@@ -10,8 +10,8 @@ assignStatement -> ID "=" expression ";"
 returnStatement -> "return" expression ";"
 blockStatement -> "{" statementList "}"
 methodDeclarationStatement -> type ID "(" Parameter ")" blockStatement
-methodCallStatement -> ID "(" expression ")"
-methodCallStatement -> ID "." ID "(" expression ")"
+methodCallStatement -> ID "(" expression* ")"
+methodCallStatement -> ID "." ID "(" expression*")"
 
 expression -> term |addition | subtraction | equals
 term -> intLiteral | ID | StringLiteral | expression | methodCallStatement | inputStatement

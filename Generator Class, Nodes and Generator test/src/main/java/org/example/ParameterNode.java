@@ -1,6 +1,6 @@
 package org.example;
 
-public class ParameterNode extends Node {
+public class ParameterNode {
     private final IdentifierNode identifierNode;
 
     public ParameterNode( IdentifierNode identifierNode) {
@@ -11,7 +11,6 @@ public class ParameterNode extends Node {
         return identifierNode;
     }
 
-    @Override
     public void accept(CodeGeneratorVisitor visitor) {
         visitor.visit(this);
     }

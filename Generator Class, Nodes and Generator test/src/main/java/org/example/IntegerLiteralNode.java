@@ -1,6 +1,6 @@
 package org.example;
 
-public class IntegerLiteralNode extends Node {
+public class IntegerLiteralNode {
     private final int value;
 
     public IntegerLiteralNode(int value) {

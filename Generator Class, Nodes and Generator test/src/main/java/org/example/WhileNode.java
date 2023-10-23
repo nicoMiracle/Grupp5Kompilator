@@ -1,6 +1,6 @@
 package org.example;
 
-public class WhileNode extends Node {
+public class WhileNode {
     private final ExpressionNode expressionNode;
     private final BlockStatement blockStatement;
 
@@ -17,7 +17,6 @@ public class WhileNode extends Node {
         return blockStatement;
     }
 
-    @Override
     public void accept(CodeGeneratorVisitor visitor) {
         visitor.visit(this);
     }

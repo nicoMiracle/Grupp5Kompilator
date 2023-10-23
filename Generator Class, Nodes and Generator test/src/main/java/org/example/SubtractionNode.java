@@ -1,6 +1,6 @@
 package org.example;
 
-public class SubtractionNode extends Node {
+public class SubtractionNode {
     private final TermNode firstTermNode;
     private final TermNode secondTermNode;
 
@@ -17,7 +17,6 @@ public class SubtractionNode extends Node {
         return secondTermNode;
     }
 
-    @Override
     public void accept(CodeGeneratorVisitor visitor) {
         visitor.visit(this);
     }

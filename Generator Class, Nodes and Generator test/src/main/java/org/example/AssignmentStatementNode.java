@@ -1,6 +1,6 @@
 package org.example;
 
-public class AssignmentStatementNode extends Node {
+public class AssignmentStatementNode {
     private final IdentifierNode identifier;
     private final ExpressionNode expression;
 

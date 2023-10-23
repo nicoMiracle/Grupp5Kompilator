@@ -2,7 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 
-public class StatementListNode extends Node {
+public class StatementListNode {
     private final ArrayList<StatementNode> statementNodes;
 
     public StatementListNode() {

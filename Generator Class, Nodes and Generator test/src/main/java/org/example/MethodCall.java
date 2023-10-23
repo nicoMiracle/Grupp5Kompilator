@@ -1,6 +1,6 @@
 package org.example;
 
-public class MethodCall extends Node {
+public class MethodCall {
     private IdentifierNode optionalIdentifier;
     private final IdentifierNode methodIdentifier;
     private ExpressionNode expressionNode;
@@ -37,7 +37,6 @@ public class MethodCall extends Node {
         return expressionNode;
     }
 
-    @Override
     public void accept(CodeGeneratorVisitor visitor) {
         visitor.visit(this);
     }

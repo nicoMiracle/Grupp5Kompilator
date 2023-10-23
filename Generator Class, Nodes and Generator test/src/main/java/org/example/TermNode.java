@@ -1,6 +1,6 @@
 package org.example;
 
-public class TermNode extends Node {
+public class TermNode {
     private IntegerLiteralNode integerLiteralNode;
     private StringLiteralNode stringLiteralNode;
     private IdentifierNode identifierNode;

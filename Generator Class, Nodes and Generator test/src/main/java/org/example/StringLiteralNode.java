@@ -1,6 +1,6 @@
 package org.example;
 
-public class StringLiteralNode extends Node {
+public class StringLiteralNode {
     private final String value;
 
     public StringLiteralNode(String value) {

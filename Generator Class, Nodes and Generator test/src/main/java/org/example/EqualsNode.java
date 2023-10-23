@@ -1,6 +1,6 @@
 package org.example;
 
-public class EqualsNode extends Node {
+public class EqualsNode {
     private final TermNode firstTerm;
     private final TermNode secondTerm;
 

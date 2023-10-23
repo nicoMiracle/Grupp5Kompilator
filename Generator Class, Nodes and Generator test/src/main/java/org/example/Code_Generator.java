@@ -33,8 +33,6 @@ public class Code_Generator implements CodeGeneratorVisitor {
     public void visit(StatementNode statementNode) {
         if (statementNode.getAssign() != null) {
             statementNode.getAssign().accept(this);
-        } else if (statementNode.getExpressionStatement() != null) {
-            statementNode.getExpressionStatement().accept(this);
         } else if (statementNode.getIfStatement() != null) {
             statementNode.getIfStatement().accept(this);
         } else if (statementNode.getWhile() != null) {
@@ -47,6 +45,9 @@ public class Code_Generator implements CodeGeneratorVisitor {
             statementNode.getReturn().accept(this);
         } else if (statementNode.getOutput() != null) {
             statementNode.getOutput().accept(this);
+        }
+        else if(statementNode.getMethod()!=null){
+            statementNode.getMethod().accept(this);
         }
     }
 
@@ -75,11 +76,6 @@ public class Code_Generator implements CodeGeneratorVisitor {
         additionNode.getFirstTermNode().accept(this);
         pythonCode.append("+");
         additionNode.getSecondTermNode().accept(this);
-    }
-
-    @Override
-    public void visit(ExpressionStatement expressionStatement) {
-        expressionStatement.getExpression().accept(this);
     }
 
     @Override
