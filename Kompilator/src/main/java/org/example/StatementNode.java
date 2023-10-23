@@ -1,22 +1,80 @@
 package org.example;
 
-public abstract class StatementNode extends ASTNode {
-    // Common properties or methods for all statement nodes can be defined here.
+public class StatementNode {
+    private AssignmentStatementNode assign;
+    private WhileNode whileNode;
+    private IfStatement ifStatement;
+    private ReturnStatement returnStatement;
+    private DeclarationStatement declarationStatement;
+    private MethodDeclarationStatement methodDeclarationStatement;
+    private OutputStatement outputStatement;
+    private MethodCall methodCall;
 
-    // For example, you might define a method for executing the statement (if your language supports runtime execution):
-
-
-    // You can also add other common methods or properties as needed by your language's grammar.
-
-    // If statements have a line or position in the source code, you can also store that information.
-    protected int line;
-    protected int position;
-
-    public int getLine() {
-        return line;
+    public StatementNode(MethodDeclarationStatement methodDeclarationStatement) {
+        this.methodDeclarationStatement = methodDeclarationStatement;
     }
 
-    public int getPosition() {
-        return position;
+    public StatementNode(DeclarationStatement declarationStatement) {
+        this.declarationStatement = declarationStatement;
+    }
+
+    public StatementNode(AssignmentStatementNode assign) {
+        this.assign = assign;
+    }
+
+    public StatementNode(WhileNode whileNode) {
+        this.whileNode = whileNode;
+    }
+
+    public StatementNode(IfStatement ifStatement) {
+        this.ifStatement = ifStatement;
+    }
+
+    public StatementNode(ReturnStatement returnStatement) {
+        this.returnStatement = returnStatement;
+    }
+
+    public StatementNode(OutputStatement outputStatement) {
+        this.outputStatement = outputStatement;
+    }
+
+    public StatementNode(MethodCall methodCall) {
+        this.methodCall = methodCall;
+    }
+
+    public AssignmentStatementNode getAssign() {
+        return assign;
+    }
+
+
+    public WhileNode getWhile() {
+        return whileNode;
+    }
+
+    public IfStatement getIfStatement() {
+        return ifStatement;
+    }
+
+    public ReturnStatement getReturn() {
+        return returnStatement;
+    }
+
+    public DeclarationStatement getDeclaration() {
+        return declarationStatement;
+    }
+
+    public MethodDeclarationStatement getMethodDeclaration() {
+        return methodDeclarationStatement;
+    }
+
+    public OutputStatement getOutput() {
+        return outputStatement;
+    }
+    public MethodCall getMethod(){
+        return methodCall;
+    }
+
+    public void accept(CodeGeneratorVisitor visitor) {
+        visitor.visit(this);
     }
 }

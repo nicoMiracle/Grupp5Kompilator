@@ -1,7 +1,7 @@
 package org.example;
 
-public class StringLiteralNode extends ExpressionNode {
-    private String value;
+public class StringLiteralNode {
+    private final String value;
 
     public StringLiteralNode(String value) {
         this.value = value;
@@ -11,8 +11,7 @@ public class StringLiteralNode extends ExpressionNode {
         return value;
     }
 
-    @Override
-    public void accept(ASTVisitor visitor) {
+    public void accept(CodeGeneratorVisitor visitor) {
         visitor.visit(this);
     }
 }
