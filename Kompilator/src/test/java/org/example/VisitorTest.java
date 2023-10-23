@@ -44,6 +44,23 @@ public class VisitorTest {
         Code_Generator code_generator = new Code_Generator();
         assertEquals("x=\"this is a string\"", code_generator.generateCode(programNode));
     }
+    @Test
+    @DisplayName("Generate x=y (assignment with another identifier) from parse tree")
+    void testAssignmentIdentifier() {
+        IdentifierNode identifierNode = new IdentifierNode("x");
+        IdentifierNode identifierNode1 = new IdentifierNode("y");
+        TermNode termNode = new TermNode(identifierNode1);
+        TermList termList = new TermList();
+        termList.add(termNode);
+        ExpressionNode expressionNode = new ExpressionNode(termList);
+        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode, expressionNode);
+        StatementNode statementNode = new StatementNode(assignmentStatementNode);
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("x=y", code_generator.generateCode(programNode), "did not get x=y");
+    }
 
     @Test
     @DisplayName("Generate x=12+20 (addition) from parse tree")
@@ -85,24 +102,6 @@ public class VisitorTest {
     }
 
     @Test
-    @DisplayName("Generate x=y (assignment with another identifier) from parse tree")
-    void testAssignmentIdentifier() {
-        IdentifierNode identifierNode = new IdentifierNode("x");
-        IdentifierNode identifierNode1 = new IdentifierNode("y");
-        TermNode termNode = new TermNode(identifierNode1);
-        TermList termList = new TermList();
-        termList.add(termNode);
-        ExpressionNode expressionNode = new ExpressionNode(termList);
-        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode, expressionNode);
-        StatementNode statementNode = new StatementNode(assignmentStatementNode);
-        StatementListNode statementListNode = new StatementListNode();
-        statementListNode.addStatement(statementNode);
-        ProgramNode programNode = new ProgramNode(statementListNode);
-        Code_Generator code_generator = new Code_Generator();
-        assertEquals("x=y", code_generator.generateCode(programNode), "did not get x=y");
-    }
-
-    @Test
     @DisplayName("Generate x=3+4-5+6-7 from parser tree (many expressions")
     void testAssignmentMany() {
         IdentifierNode identifierNode = new IdentifierNode("x");
@@ -129,85 +128,63 @@ public class VisitorTest {
     @Test
     @DisplayName("generate if statement with one expression and one statement inside")
     void generateIfStatementWithOneStatement() {
-        IdentifierNode identifierNode = new IdentifierNode("x");
-        TermNode termNodeIdentifier = new TermNode(identifierNode);
-        StringLiteralNode stringLiteralNode = new StringLiteralNode("true");
-        TermNode termNodeString = new TermNode(stringLiteralNode);
-        EqualsNode equalsNode = new EqualsNode(termNodeIdentifier, termNodeString);
-        ExpressionNode expressionNode = new ExpressionNode(equalsNode);
-        IdentifierNode identifierNode1 = new IdentifierNode("y");
-        StringLiteralNode stringLiteralNode1 = new StringLiteralNode("false");
-        TermNode termNode1 = new TermNode(stringLiteralNode1);
-        ExpressionNode expressionNode1 = new ExpressionNode(termNode1);
-        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode1, expressionNode1);
-        StatementNode statementNode = new StatementNode(assignmentStatementNode);
-        StatementListNode statementListNodeBlock = new StatementListNode();
-        statementListNodeBlock.addStatement(statementNode);
-        BlockStatement blockStatement = new BlockStatement(statementListNodeBlock);
-        IfStatement ifStatement = new IfStatement(expressionNode, blockStatement);
+        StatementListNode statementListNodeIf = new StatementListNode();
+        BlockStatement blockStatementIf = new BlockStatement(statementListNodeIf);
+        IfStatement ifStatement = new IfStatement(new ExpressionNode(new EqualsNode(new TermNode(new IdentifierNode("x")),new TermNode(new StringLiteralNode("true")))),blockStatementIf);
         StatementListNode statementListNode = new StatementListNode();
         StatementNode statementNode1 = new StatementNode(ifStatement);
         statementListNode.addStatement(statementNode1);
+
+        TermNode termNode = new TermNode(new StringLiteralNode("false"));
+        TermList termList = new TermList();
+        termList.add(termNode);
+        ExpressionNode expressionNode = new ExpressionNode(termList);
+        StatementNode statementNode = new StatementNode(new AssignmentStatementNode(new IdentifierNode("y"),expressionNode));
+        statementListNodeIf.addStatement(statementNode);
         ProgramNode programNode = new ProgramNode(statementListNode);
         Code_Generator code_generator = new Code_Generator();
         assertEquals("if(x==\"true\"):\n   y=\"false\"", code_generator.generateCode(programNode), "the result was not the one expected");
-    }/*
+    }
 
 
     @Test
     @DisplayName("Generate a while loop with one expression and 3 statements inside, as well as another statement outside after")
     void testWhileMultipleStatements() {
-        IdentifierNode identifierNode = new IdentifierNode("x");
-        TermNode termNodeIdentifier = new TermNode(identifierNode);
-        StringLiteralNode stringLiteralNode = new StringLiteralNode("true");
-        TermNode termNodeString = new TermNode(stringLiteralNode);
-        EqualsNode equalsNode = new EqualsNode(termNodeIdentifier, termNodeString);
-        ExpressionNode expressionNode = new ExpressionNode(equalsNode);
-        IdentifierNode identifierNode1 = new IdentifierNode("y");
-        StringLiteralNode stringLiteralNode1 = new StringLiteralNode("false");
-        TermNode termNode1 = new TermNode(stringLiteralNode1);
-        ExpressionNode expressionNode1 = new ExpressionNode(termNode1);
-        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode1, expressionNode1);
-        StatementNode statementNode = new StatementNode(assignmentStatementNode);
-        StatementListNode statementListNodeBlock = new StatementListNode();
 
-        IdentifierNode identifierNodeZ = new IdentifierNode("z");
-        IntegerLiteralNode integerLiteralNode = new IntegerLiteralNode(32);
-        TermNode termNodeInt = new TermNode(integerLiteralNode);
-        ExpressionNode expressionNode2 = new ExpressionNode(termNodeInt);
-        AssignmentStatementNode assignmentStatementNode1 = new AssignmentStatementNode(identifierNodeZ, expressionNode2);
-        StatementNode statementNode1 = new StatementNode(assignmentStatementNode1);
-
-        IdentifierNode identifierNodeB = new IdentifierNode("b");
-        IntegerLiteralNode integerLiteralNode1 = new IntegerLiteralNode(32);
-        TermNode termNodeInt2 = new TermNode(integerLiteralNode1);
-        IntegerLiteralNode integerLiteralNode2 = new IntegerLiteralNode(6);
-        TermNode termNodeInt3 = new TermNode(integerLiteralNode2);
-        ExpressionNode expressionNode3 = new ExpressionNode(termNodeInt2);
-        ExpressionNode expressionNode4 = new ExpressionNode(termNodeInt3);
-        TermNode termNodeExpression = new TermNode(expressionNode3);
-        TermNode termNodeExpression2 = new TermNode(expressionNode4);
-        AdditionNode additionNode = new AdditionNode(termNodeExpression, termNodeExpression2);
-        ExpressionNode expressionNode5 = new ExpressionNode(additionNode);
-        AssignmentStatementNode assignmentStatementNode2 = new AssignmentStatementNode(identifierNodeB, expressionNode5);
-        StatementNode statementNode2 = new StatementNode(assignmentStatementNode2);
-
-        statementListNodeBlock.addStatement(statementNode);
-        statementListNodeBlock.addStatement(statementNode1);
-        statementListNodeBlock.addStatement(statementNode2);
-        BlockStatement blockStatement = new BlockStatement(statementListNodeBlock);
-        WhileNode whileNode = new WhileNode(expressionNode, blockStatement);
         StatementListNode statementListNode = new StatementListNode();
-        IdentifierNode identifierNodeOut = new IdentifierNode("x");
-        IntegerLiteralNode integerLiteralNodeOut = new IntegerLiteralNode(32);
-        TermNode termNode = new TermNode(integerLiteralNodeOut);
-        ExpressionNode expressionNodeOut = new ExpressionNode(termNode);
-        AssignmentStatementNode assignmentStatementNodeOut = new AssignmentStatementNode(identifierNodeOut, expressionNodeOut);
-        StatementNode statementNodeOut = new StatementNode(assignmentStatementNodeOut);
-        StatementNode statementNode3 = new StatementNode(whileNode);
-        statementListNode.addStatement(statementNode3);
-        statementListNode.addStatement(statementNodeOut);
         ProgramNode programNode = new ProgramNode(statementListNode);
+
+        StatementListNode statementListNodeWhile = new StatementListNode();
+        BlockStatement blockStatementWhile = new BlockStatement(statementListNodeWhile);
+        WhileNode whileNode = new WhileNode(new ExpressionNode(new EqualsNode(new TermNode(new IdentifierNode("x")),new TermNode(new StringLiteralNode("true")))),blockStatementWhile);
+        StatementNode statementNodeWhile = new StatementNode(whileNode);
+        statementListNode.addStatement(statementNodeWhile);
+
+        TermList termList = new TermList();
+        termList.add(new TermNode(new StringLiteralNode("false")));
+        ExpressionNode expressionNode = new ExpressionNode(termList);
+        StatementNode statementNode = new StatementNode(new AssignmentStatementNode(new IdentifierNode("y"),expressionNode));
+        statementListNodeWhile.addStatement(statementNode);
+
+        TermList termList1 = new TermList();
+        termList1.add(new TermNode(new IntegerLiteralNode(32)));
+        ExpressionNode expressionNode1 = new ExpressionNode(termList1);
+        StatementNode statementNode1 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("z"),expressionNode1));
+        statementListNodeWhile.addStatement(statementNode1);
+
+        TermList termList2 = new TermList();
+        termList2.add(new TermNode(new IntegerLiteralNode(32)));
+        termList2.add(new TermNode(new PositiveTermNode(new IntegerLiteralNode(6))));
+        ExpressionNode expressionNode2 = new ExpressionNode(termList2);
+        StatementNode statementNode2 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("b"), expressionNode2));
+        statementListNodeWhile.addStatement(statementNode2);
+
+        TermList termList3 = new TermList();
+        termList3.add(new TermNode(new IntegerLiteralNode(32)));
+        ExpressionNode expressionNode3 = new ExpressionNode(termList3);
+        StatementNode statementNode3 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("x"), expressionNode3));
+        statementListNode.addStatement(statementNode3);
+
         Code_Generator code_generator = new Code_Generator();
         assertEquals("while(x==\"true\"):\n   y=\"false\"\n   z=32\n   b=32+6\nx=32", code_generator.generateCode(programNode), "the result was not the one expected");
     }
@@ -219,7 +196,9 @@ public class VisitorTest {
         IdentifierNode identifierNode = new IdentifierNode("getName");
         MethodCall methodCall = new MethodCall(identifierNode);
         TermNode termNode = new TermNode(methodCall);
-        ExpressionNode expressionNode = new ExpressionNode(termNode);
+        TermList termList = new TermList();
+        termList.add(termNode);
+        ExpressionNode expressionNode = new ExpressionNode(termList);
         AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNodeOut, expressionNode);
         StatementNode statementNode = new StatementNode(assignmentStatementNode);
         StatementListNode statementListNode = new StatementListNode();
@@ -237,7 +216,9 @@ public class VisitorTest {
         IdentifierNode identifierNode1 = new IdentifierNode("Object");
         MethodCall methodCall = new MethodCall(identifierNode1, identifierNode);
         TermNode termNode = new TermNode(methodCall);
-        ExpressionNode expressionNode = new ExpressionNode(termNode);
+        TermList termList = new TermList();
+        termList.add(termNode);
+        ExpressionNode expressionNode = new ExpressionNode(termList);
         AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNodeOut, expressionNode);
         StatementNode statementNode = new StatementNode(assignmentStatementNode);
         StatementListNode statementListNode = new StatementListNode();
@@ -254,14 +235,18 @@ public class VisitorTest {
         IdentifierNode identifierNode = new IdentifierNode("x");
         IdentifierNode identifierNode1 = new IdentifierNode("y");
         TermNode termNode = new TermNode(identifierNode);
-        TermNode termNode1 = new TermNode(identifierNode1);
-        AdditionNode additionNode = new AdditionNode(termNode, termNode1);
-        ExpressionNode expressionNode = new ExpressionNode(additionNode);
+        TermNode termNode1 = new TermNode(new PositiveTermNode(identifierNode1));
+        TermList termList = new TermList();
+        termList.add(termNode);
+        termList.add(termNode1);
+        ExpressionNode expressionNode = new ExpressionNode(termList);
         IdentifierNode identifierNode2 = new IdentifierNode("Math");
         IdentifierNode identifierNode4 = new IdentifierNode("getAbsolute");
         MethodCall methodCall = new MethodCall(identifierNode2, identifierNode4, expressionNode);
         TermNode termNode2 = new TermNode(methodCall);
-        ExpressionNode expressionNode1 = new ExpressionNode(termNode2);
+        TermList termList1 = new TermList();
+        termList1.add(termNode2);
+        ExpressionNode expressionNode1 = new ExpressionNode(termList1);
         AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode3, expressionNode1);
         StatementNode statementNode = new StatementNode(assignmentStatementNode);
         StatementListNode statementListNode = new StatementListNode();
@@ -278,13 +263,18 @@ public class VisitorTest {
         IdentifierNode identifierNode = new IdentifierNode("x");
         IdentifierNode identifierNode1 = new IdentifierNode("y");
         TermNode termNode = new TermNode(identifierNode);
-        TermNode termNode1 = new TermNode(identifierNode1);
-        AdditionNode additionNode = new AdditionNode(termNode, termNode1);
-        ExpressionNode expressionNode = new ExpressionNode(additionNode);
+        TermNode termNode1 = new TermNode(new PositiveTermNode(identifierNode1));
+
+        TermList termList = new TermList();
+        termList.add(termNode);
+        termList.add(termNode1);
+        ExpressionNode expressionNode = new ExpressionNode(termList);
         IdentifierNode identifierNode4 = new IdentifierNode("getAbsolute");
         MethodCall methodCall = new MethodCall(identifierNode4, expressionNode);
         TermNode termNode2 = new TermNode(methodCall);
-        ExpressionNode expressionNode1 = new ExpressionNode(termNode2);
+        TermList termList1 = new TermList();
+        termList1.add(termNode2);
+        ExpressionNode expressionNode1 = new ExpressionNode(termList1);
         AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode3, expressionNode1);
         StatementNode statementNode = new StatementNode(assignmentStatementNode);
         StatementListNode statementListNode = new StatementListNode();
@@ -301,7 +291,9 @@ public class VisitorTest {
         IdentifierNode identifierNode = new IdentifierNode("x");
         StringLiteralNode stringLiteralNode = new StringLiteralNode("correct");
         TermNode termNode = new TermNode(stringLiteralNode);
-        ExpressionNode expressionNode = new ExpressionNode(termNode);
+        TermList termList = new TermList();
+        termList.add(termNode);
+        ExpressionNode expressionNode = new ExpressionNode(termList);
         AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode, expressionNode);
         DeclarationStatement declarationStatement = new DeclarationStatement(assignmentStatementNode);
         StatementNode statementNode = new StatementNode(declarationStatement);
@@ -318,7 +310,9 @@ public class VisitorTest {
         IdentifierNode identifierNode = new IdentifierNode("x");
         InputStatement inputStatement = new InputStatement();
         TermNode termNode = new TermNode(inputStatement);
-        ExpressionNode expressionNode = new ExpressionNode(termNode);
+        TermList termList = new TermList();
+        termList.add(termNode);
+        ExpressionNode expressionNode = new ExpressionNode(termList);
         AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(identifierNode, expressionNode);
         StatementNode statementNode = new StatementNode(assignmentStatementNode);
         StatementListNode statementListNode = new StatementListNode();
@@ -327,7 +321,42 @@ public class VisitorTest {
         Code_Generator code_generator = new Code_Generator();
         assertEquals("x=input()", code_generator.generateCode(programNode), "did not get expected thing");
     }
-
+    @Test
+    @DisplayName("Generate an assignment where all types of positive")
+    void testAllPositive(){
+        TermList termList = new TermList();
+        termList.add(new TermNode(new IntegerLiteralNode(1)));
+        termList.add(new TermNode(new PositiveTermNode(new IntegerLiteralNode(2))));
+        termList.add(new TermNode(new PositiveTermNode(new StringLiteralNode("text"))));
+        termList.add(new TermNode(new PositiveTermNode(new IdentifierNode("ID"))));
+        termList.add(new TermNode(new PositiveTermNode(new InputStatement())));
+        termList.add(new TermNode(new PositiveTermNode(new MethodCall(new IdentifierNode("method")))));
+        ExpressionNode expressionNode = new ExpressionNode(termList);
+        StatementNode statementNode = new StatementNode(new AssignmentStatementNode(new IdentifierNode("x"),expressionNode));
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("x=1+2+\"text\"+ID+input()+method()",code_generator.generateCode(programNode),"got wrong result");
+    }
+    @Test
+    @DisplayName("Generate an assignment where all types of negatives")
+    void testAllNegatives(){
+        TermList termList = new TermList();
+        termList.add(new TermNode(new IntegerLiteralNode(1)));
+        termList.add(new TermNode(new NegativeTerm(new IntegerLiteralNode(2))));
+        termList.add(new TermNode(new NegativeTerm(new StringLiteralNode("text"))));
+        termList.add(new TermNode(new NegativeTerm(new IdentifierNode("ID"))));
+        termList.add(new TermNode(new NegativeTerm(new InputStatement())));
+        termList.add(new TermNode(new NegativeTerm(new MethodCall(new IdentifierNode("method")))));
+        ExpressionNode expressionNode = new ExpressionNode(termList);
+        StatementNode statementNode = new StatementNode(new AssignmentStatementNode(new IdentifierNode("x"),expressionNode));
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(statementNode);
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        assertEquals("x=1-2-\"text\"-ID-input()-method()",code_generator.generateCode(programNode),"got wrong result");
+    }
     @Test
     @DisplayName("Generate a method with no parameters with a return statement at the end")
     void testGenerateMethodWithReturn() {
@@ -336,15 +365,17 @@ public class VisitorTest {
         IdentifierNode result = new IdentifierNode("result");
         IdentifierNode firstTerm = new IdentifierNode("x");
         IdentifierNode secondTerm = new IdentifierNode("y");
-        TermNode termNode = new TermNode(firstTerm);
-        TermNode termNode1 = new TermNode(secondTerm);
-        AdditionNode additionNode = new AdditionNode(termNode, termNode1);
-        ExpressionNode expressionNode = new ExpressionNode(additionNode);
+        TermList termList = new TermList();
+        termList.add(new TermNode(firstTerm));
+        termList.add(new TermNode(new PositiveTermNode(secondTerm)));
+        ExpressionNode expressionNode = new ExpressionNode(termList);
         AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(result, expressionNode);
         StatementNode statementNode1 = new StatementNode(assignmentStatementNode);
         statementListNodeBlock.addStatement(statementNode1);
-        TermNode termNode2 = new TermNode(result);
-        ExpressionNode expressionNode1 = new ExpressionNode(termNode2);
+
+        TermList termList1 = new TermList();
+        termList1.add(new TermNode(result));
+        ExpressionNode expressionNode1 = new ExpressionNode(termList1);
         ReturnStatement returnStatement = new ReturnStatement(expressionNode1);
         StatementNode statementNode = new StatementNode(returnStatement);
         statementListNodeBlock.addStatement(statementNode);
@@ -367,15 +398,16 @@ public class VisitorTest {
         IdentifierNode result = new IdentifierNode("result");
         IdentifierNode firstTerm = new IdentifierNode("x");
         IdentifierNode secondTerm = new IdentifierNode("y");
-        TermNode termNode = new TermNode(firstTerm);
-        TermNode termNode1 = new TermNode(secondTerm);
-        AdditionNode additionNode = new AdditionNode(termNode, termNode1);
-        ExpressionNode expressionNode = new ExpressionNode(additionNode);
+        TermList termList1 = new TermList();
+        termList1.add(new TermNode(firstTerm));
+        termList1.add(new TermNode(new PositiveTermNode(secondTerm)));
+        ExpressionNode expressionNode = new ExpressionNode(termList1);
         AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(result, expressionNode);
         StatementNode statementNode1 = new StatementNode(assignmentStatementNode);
         statementListNodeBlock.addStatement(statementNode1);
-        TermNode termNode2 = new TermNode(result);
-        ExpressionNode expressionNode1 = new ExpressionNode(termNode2);
+        TermList termList = new TermList();
+        termList.add(new TermNode(result));
+        ExpressionNode expressionNode1 = new ExpressionNode(termList);
         ReturnStatement returnStatement = new ReturnStatement(expressionNode1);
         StatementNode statementNode = new StatementNode(returnStatement);
         statementListNodeBlock.addStatement(statementNode);
@@ -395,7 +427,9 @@ public class VisitorTest {
     @Test
     @DisplayName("generate an output statement that prints Hello World")
     void testOutputHelloWorld() {
-        OutputStatement outputStatement = new OutputStatement(new ExpressionNode(new TermNode(new StringLiteralNode("Hello World"))));
+        TermList termList = new TermList();
+        termList.add(new TermNode(new StringLiteralNode("Hello World")));
+        OutputStatement outputStatement = new OutputStatement(new ExpressionNode(termList));
         StatementNode statementNode = new StatementNode(outputStatement);
         StatementListNode statementListNode = new StatementListNode();
         statementListNode.addStatement(statementNode);
@@ -408,7 +442,9 @@ public class VisitorTest {
     void testGenerateTripleNested(){
         StatementListNode statementListNodeIf = new StatementListNode();
         BlockStatement blockStatementIf = new BlockStatement(statementListNodeIf);
-        IfStatement ifStatement = new IfStatement(new ExpressionNode(new TermNode(new IdentifierNode("yes"))),blockStatementIf);
+        TermList termList = new TermList();
+        termList.add(new TermNode(new IdentifierNode("yes")));
+        IfStatement ifStatement = new IfStatement(new ExpressionNode(termList),blockStatementIf);
         StatementListNode statementListNodeWhile = new StatementListNode();
         StatementNode statementNodeIf = new StatementNode(ifStatement);
         statementListNodeWhile.addStatement(statementNodeIf);
@@ -430,89 +466,123 @@ public class VisitorTest {
     @DisplayName("Generate every single type of node in one test using state machine, 100% coverage")
     void testGenerateEverythingOneTest(){
         StatementListNode statementListNodeProgram = new StatementListNode();
-        //Generate Declaration with assignment, first line
-        ExpressionNode expressionNode = new ExpressionNode(new TermNode(new IdentifierNode("true")));
-        AssignmentStatementNode assignmentStatementNode = new AssignmentStatementNode(new IdentifierNode("yes"),expressionNode);
-        DeclarationStatement declarationStatement = new DeclarationStatement(assignmentStatementNode);
-        StatementNode statementNodeDeclaration = new StatementNode(declarationStatement);
-        statementListNodeProgram.addStatement(statementNodeDeclaration);
-        //Generate lone Assignment with int, first line
-        ExpressionNode expressionNode1 = new ExpressionNode(new TermNode(new IntegerLiteralNode(5)));
-        StatementNode statementNodeAssignment1 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("five"),expressionNode1));
-        statementListNodeProgram.addStatement(statementNodeAssignment1);
-        //Generate assignment with string, line 2
-        ExpressionNode expressionNode2 = new ExpressionNode(new TermNode(new StringLiteralNode("Zoe")));
-        StatementNode statementNode2 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("name"),expressionNode2));
-        statementListNodeProgram.addStatement(statementNode2);
-        //Generate assignment with addition and subtraction, line 3
-        ExpressionNode expressionNode3 = new ExpressionNode(new AdditionNode(new TermNode(new IntegerLiteralNode(5)),new TermNode(new ExpressionNode(new SubtractionNode(new TermNode(new IntegerLiteralNode(6)),new TermNode(new IntegerLiteralNode(7)))))));
-        StatementNode statementNode3 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("plusNminus"),expressionNode3));
-        statementListNodeProgram.addStatement(statementNode3);
-        //Generate assignment with input , line 4
-        StatementNode statementNode4 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("say_hi"),new ExpressionNode(new TermNode(new InputStatement()))));
-        statementListNodeProgram.addStatement(statementNode4);
-        //Generate an assignment with a method call statement, only one identifier, line 5
-        MethodCall methodCall = new MethodCall(new IdentifierNode("getSix"));
-        StatementNode statementNode = new StatementNode(new AssignmentStatementNode(new IdentifierNode("six"),new ExpressionNode(new TermNode(methodCall))));
-        statementListNodeProgram.addStatement(statementNode);
-        //Generate an assignment with a method call, two identifiers, line 6
-        ExpressionNode expressionNode4 = new ExpressionNode(new TermNode(new MethodCall(new IdentifierNode("Math"),new IdentifierNode("getSeven"))));
-        StatementNode statementNode1 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("seven"),expressionNode4));
-        statementListNodeProgram.addStatement(statementNode1);
-        //Generate an assignment with a method call, one identifier, one parameter, line 7
-        ExpressionNode expressionNode6 = new ExpressionNode(new TermNode(new IntegerLiteralNode(5)));
-        ExpressionNode expressionNode5 = new ExpressionNode(new TermNode(new MethodCall(new IdentifierNode("getEight"),expressionNode6)));
-        StatementNode statementNode5 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("eight"),expressionNode5));
-        statementListNodeProgram.addStatement(statementNode5);
-        //Generate an assignment with a method call, two identifier, one parameter, line 8
-        ExpressionNode expressionNode8 = new ExpressionNode(new TermNode(new IntegerLiteralNode(0)));
-        ExpressionNode expressionNode7 = new ExpressionNode(new TermNode(new MethodCall(new IdentifierNode("Math"),new IdentifierNode("getMaxInt"),expressionNode8)));
-        StatementNode statementNode6 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("maxInt"),expressionNode7));
-        statementListNodeProgram.addStatement(statementNode6);
-        //Generate a print statement, line 9
-        StatementNode statementNode7 = new StatementNode(new OutputStatement(new ExpressionNode(new TermNode(new StringLiteralNode("Hello World")))));
-        statementListNodeProgram.addStatement(statementNode7);
-        //Generate a method declaration with a parameter, with a while loop, and an if, and a return
-        StatementListNode statementListNodeMethod = new StatementListNode();
-        BlockStatement blockStatementMethod = new BlockStatement(statementListNodeMethod);
-        ParameterNode parameterNode = new ParameterNode(new IdentifierNode("number"));
-        ParameterListNode parameterListNode = new ParameterListNode();
-        parameterListNode.addParameter(parameterNode);
-
-        EqualsNode equalsNode = new EqualsNode(new TermNode(new IdentifierNode("name")),new TermNode(new StringLiteralNode("Zoe")));
-        StatementListNode statementListNodeWhile = new StatementListNode();
-        BlockStatement blockStatementWhile = new BlockStatement(statementListNodeWhile);
-        StatementNode statementNode9 = new StatementNode(new WhileNode(new ExpressionNode(equalsNode),blockStatementWhile));
-        statementListNodeMethod.addStatement(statementNode9);
-
-        StatementListNode statementListNodeIf = new StatementListNode();
-        BlockStatement blockStatementIf = new BlockStatement(statementListNodeIf);
-        StatementNode statementNode10 = new StatementNode(new IfStatement(new ExpressionNode(new TermNode(new IdentifierNode("changeName"))),blockStatementIf));
-        ExpressionNode expressionNode9 = new ExpressionNode(new TermNode(new StringLiteralNode("Maria")));
-        StatementNode statementNode11 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("name"),expressionNode9));
-        statementListNodeIf.addStatement(statementNode11);
-        statementListNodeWhile.addStatement(statementNode10);
-        StatementNode statementNode8 = new StatementNode(new MethodDeclarationStatement(new IdentifierNode("method"),parameterListNode,blockStatementMethod));
-        StatementNode statementNode12 = new StatementNode(new ReturnStatement(new ExpressionNode(new TermNode(new IdentifierNode("name")))));
-        statementListNodeProgram.addStatement(statementNode8);
-        statementListNodeIf.addStatement(statementNode12);
-        //Generate a simple method with no parameter, with an output inside
-        StatementListNode statementListNodeHello = new StatementListNode();
-        BlockStatement blockStatementHello = new BlockStatement(statementListNodeHello);
-        StatementNode statementNode13 = new StatementNode(new MethodDeclarationStatement(new IdentifierNode("hello"),blockStatementHello));
-        StatementNode statementNode14 = new StatementNode(new OutputStatement(new ExpressionNode(new TermNode(new StringLiteralNode("Hello!")))));
-        statementListNodeHello.addStatement(statementNode14);
-        statementListNodeProgram.addStatement(statementNode13);
-        //Generate a method call as a lone statement
-        StatementNode statementNode15 = new StatementNode(new MethodCall(new IdentifierNode("hello")));
-        statementListNodeProgram.addStatement(statementNode15);
         ProgramNode programNode = new ProgramNode(statementListNodeProgram);
+        //All positives
+        TermList termList = new TermList();
+        termList.add(new TermNode(new IntegerLiteralNode(1)));
+        termList.add(new TermNode(new PositiveTermNode(new IntegerLiteralNode(2))));
+        termList.add(new TermNode(new PositiveTermNode(new StringLiteralNode("text"))));
+        termList.add(new TermNode(new PositiveTermNode(new IdentifierNode("ID"))));
+        termList.add(new TermNode(new PositiveTermNode(new InputStatement())));
+        termList.add(new TermNode(new PositiveTermNode(new MethodCall(new IdentifierNode("method")))));
+        ExpressionNode expressionNode = new ExpressionNode(termList);
+        StatementNode statementNodeAllPositive = new StatementNode(new AssignmentStatementNode(new IdentifierNode("x"),expressionNode));
+        statementListNodeProgram.addStatement(statementNodeAllPositive);
+        //All negatives
+        TermList termList1 = new TermList();
+        termList1.add(new TermNode(new IntegerLiteralNode(1)));
+        termList1.add(new TermNode(new NegativeTerm(new IntegerLiteralNode(2))));
+        termList1.add(new TermNode(new NegativeTerm(new StringLiteralNode("text"))));
+        termList1.add(new TermNode(new NegativeTerm(new IdentifierNode("ID"))));
+        termList1.add(new TermNode(new NegativeTerm(new InputStatement())));
+        termList1.add(new TermNode(new NegativeTerm(new MethodCall(new IdentifierNode("method")))));
+        ExpressionNode expressionNode1 = new ExpressionNode(termList1);
+        StatementNode statementNodeNegatives = new StatementNode(new AssignmentStatementNode(new IdentifierNode("x"), expressionNode1));
+        statementListNodeProgram.addStatement(statementNodeNegatives);
+        //Declaration Assignment with int
+        TermList termList2 = new TermList();
+        termList2.add(new TermNode(new IntegerLiteralNode(5)));
+        ExpressionNode expressionNode2 = new ExpressionNode(termList2);
+        StatementNode statementNodeInt = new StatementNode(new DeclarationStatement(new AssignmentStatementNode(new IdentifierNode("int"),expressionNode2)));
+        statementListNodeProgram.addStatement(statementNodeInt);
+        //Assignment with String
+        TermList termList3 = new TermList();
+        termList3.add(new TermNode(new StringLiteralNode("Zoe")));
+        ExpressionNode expressionNode3 = new ExpressionNode(termList3);
+        StatementNode statementNodeString = new StatementNode(new AssignmentStatementNode(new IdentifierNode("string"), expressionNode3));
+        statementListNodeProgram.addStatement(statementNodeString);
+        //Assignment with input
+        TermList termList4 = new TermList();
+        termList4.add(new TermNode(new InputStatement()));
+        ExpressionNode expressionNode4 = new ExpressionNode(termList4);
+        StatementNode statementNodeInput = new StatementNode(new AssignmentStatementNode(new IdentifierNode("say_hi"), expressionNode4));
+        statementListNodeProgram.addStatement(statementNodeInput);
+        //Assignment with method call, one identifier
+        TermList termList5 = new TermList();
+        termList5.add(new TermNode(new MethodCall(new IdentifierNode("getSix"))));
+        ExpressionNode expressionNode5 = new ExpressionNode(termList5);
+        StatementNode statementNode5 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("six"),expressionNode5));
+        statementListNodeProgram.addStatement(statementNode5);
+        //Assignment with method call, two identifier
+        TermList termList6 = new TermList();
+        termList6.add(new TermNode(new MethodCall(new IdentifierNode("Math"),new IdentifierNode("getSeven"))));
+        ExpressionNode expressionNode6 = new ExpressionNode(termList6);
+        StatementNode statementNode6 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("seven"), expressionNode6));
+        statementListNodeProgram.addStatement(statementNode6);
+        //Assignment with method call, one identifier, one parameter
+        TermList termList7 = new TermList();
+        TermList termList8 = new TermList();
+        termList8.add(new TermNode(new IntegerLiteralNode(5)));
+        termList7.add(new TermNode(new MethodCall(new IdentifierNode("getEight"),new ExpressionNode(termList8))));
+        ExpressionNode expressionNode7 = new ExpressionNode(termList7);
+        StatementNode statementNode7 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("eight"), expressionNode7));
+        statementListNodeProgram.addStatement(statementNode7);
+        //Assignment with method call, two identifier, one parameter
+        TermList termList9 = new TermList();
+        TermList termList10 = new TermList();
+        termList10.add(new TermNode(new IntegerLiteralNode(0)));
+        termList9.add(new TermNode(new MethodCall(new IdentifierNode("Math"),new IdentifierNode("getMaxInt"),new ExpressionNode(termList10))));
+        ExpressionNode expressionNode8 = new ExpressionNode(termList9);
+        StatementNode statementNode8 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("maxInt"), expressionNode8));
+        statementListNodeProgram.addStatement(statementNode8);
+        //One line of output
+        TermList termList11 = new TermList();
+        termList11.add(new TermNode(new StringLiteralNode("Hello World")));
+        OutputStatement outputStatement = new OutputStatement(new ExpressionNode(termList11));
+        StatementNode statementNode12 = new StatementNode(outputStatement);
+        statementListNodeProgram.addStatement(statementNode12);
+        //One function with a parameter, one while inside that, one if inside, one variable and return
+        ParameterListNode parameterListNode = new ParameterListNode();
+        parameterListNode.addParameter(new ParameterNode(new IdentifierNode("number")));
+        StatementListNode statementListNode1 = new StatementListNode();
+        BlockStatement blockStatementMethod = new BlockStatement(statementListNode1);
+        StatementListNode statementListNode2 = new StatementListNode();
+        TermList termList12 = new TermList();
+        termList12.add(new TermNode(new IdentifierNode("changeName")));
+        StatementListNode statementListNode3 = new StatementListNode();
+        TermList termList13 = new TermList();
+        termList13.add(new TermNode(new StringLiteralNode("Maria")));
+        ExpressionNode expressionNode9 = new ExpressionNode(termList13);
+        statementListNode3.addStatement(new StatementNode(new AssignmentStatementNode(new IdentifierNode("name"),expressionNode9)));
+        BlockStatement blockStatementIf = new BlockStatement(statementListNode3);
+        StatementNode statementNode3 = new StatementNode(new IfStatement(new ExpressionNode(termList12),blockStatementIf));
+        statementListNode2.addStatement(statementNode3);
+        TermList termList14 = new TermList();
+        termList14.add(new TermNode(new IdentifierNode("name")));
+        ExpressionNode expressionNode10 = new ExpressionNode(termList14);
+        statementListNode3.addStatement(new StatementNode(new ReturnStatement(expressionNode10)));
+        BlockStatement blockStatement = new BlockStatement(statementListNode2);
+        StatementNode statementNode = new StatementNode(new WhileNode(new ExpressionNode(new EqualsNode(new TermNode(new IdentifierNode("name")),new TermNode(new StringLiteralNode("Zoe")))),blockStatement));
+        statementListNode1.addStatement(statementNode);
+        MethodDeclarationStatement methodDeclarationStatement = new MethodDeclarationStatement(new IdentifierNode("method"),parameterListNode,blockStatementMethod);
+        StatementNode statementNode1 = new StatementNode(methodDeclarationStatement);
+        statementListNodeProgram.addStatement(statementNode1);
+        //method declaration, no parameters, one output inside
+        StatementListNode statementListNode4 = new StatementListNode();
+        TermList termList15 = new TermList();
+        termList15.add(new TermNode(new StringLiteralNode("Hello!")));
+        statementListNode4.addStatement(new StatementNode(new OutputStatement(new ExpressionNode(termList15))));
+        BlockStatement blockStatement1 = new BlockStatement(statementListNode4);
+        StatementNode statementNode2 = new StatementNode(new MethodDeclarationStatement(new IdentifierNode("hello"),blockStatement1));
+        statementListNodeProgram.addStatement(statementNode2);
+        //one method call as statement
+        statementListNodeProgram.addStatement(new StatementNode(new MethodCall(new IdentifierNode("hello"))));
         Code_Generator code_generator = new Code_Generator();
         assertEquals("""
-                yes=true
-                five=5
-                name="Zoe"
-                plusNminus=5+6-7
+                x=1+2+"text"+ID+input()+method()
+                x=1-2-"text"-ID-input()-method()
+                int=5
+                string="Zoe"
                 say_hi=input()
                 six=getSix()
                 seven=Math.getSeven()
@@ -528,4 +598,4 @@ public class VisitorTest {
                    print("Hello!")
                 hello()""",code_generator.generateCode(programNode),"did not get expected");
     }
-}*/}
+}

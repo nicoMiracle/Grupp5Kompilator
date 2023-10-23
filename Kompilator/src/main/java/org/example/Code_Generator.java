@@ -185,6 +185,18 @@ public class Code_Generator implements CodeGeneratorVisitor {
         if(positiveTermNode.getIntegerLiteralNode()!=null){
             positiveTermNode.getIntegerLiteralNode().accept(this);
         }
+        else if(positiveTermNode.getIdentifierNode()!=null){
+            positiveTermNode.getIdentifierNode().accept(this);
+        }
+        else if(positiveTermNode.getStringLiteralNode()!=null){
+            positiveTermNode.getStringLiteralNode().accept(this);
+        }
+        else if(positiveTermNode.getInput()!=null){
+            positiveTermNode.getInput().accept(this);
+        }
+        else if(positiveTermNode.getMethodCall()!=null){
+            positiveTermNode.getMethodCall().accept(this);
+        }
     }
 
     @Override
@@ -192,6 +204,18 @@ public class Code_Generator implements CodeGeneratorVisitor {
         pythonCode.append("-");
         if(negativeTerm.getIntegerLiteralNode()!=null){
             negativeTerm.getIntegerLiteralNode().accept(this);
+        }
+        else if(negativeTerm.getIdentifierNode()!=null){
+            negativeTerm.getIdentifierNode().accept(this);
+        }
+        else if(negativeTerm.getInput()!=null){
+            negativeTerm.getInput().accept(this);
+        }
+        else if(negativeTerm.getMethodCall()!=null){
+            negativeTerm.getMethodCall().accept(this);
+        }
+        else if(negativeTerm.getStringLiteralNode()!=null){
+            negativeTerm.getStringLiteralNode().accept(this);
         }
     }
 
