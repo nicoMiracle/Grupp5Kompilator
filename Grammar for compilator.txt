@@ -13,12 +13,12 @@ methodDeclarationStatement -> type ID "(" Parameter ")" blockStatement
 methodCallStatement -> ID "(" expression ")"
 methodCallStatement -> ID "." ID "(" expression ")"
 
-expression -> term |addition | subtraction | equals
-term -> intLiteral | ID | StringLiteral | expression | methodCallStatement | inputStatement
+expression -> term | equals
+term -> intLiteral | ID | StringLiteral | expression | methodCallStatement | inputStatement ||addition | subtraction |
 
-addition-> expression "+" expression
-subtraction -> expression "-" expression
-equals -> expression "==" expression
+addition-> term "+" term
+subtraction -> term "-" term
+equals -> term "==" term
 
 inputStatement -> "input" "." "nextLine" "(" ")"
 outputStatement -> "System" "." "out" "." "println" "(" expression ")"
