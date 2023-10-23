@@ -1,6 +1,6 @@
 package org.example;
 
-public class ProgramNode extends Node {
+public class ProgramNode {
     private final StatementListNode statements;
 
     ProgramNode(StatementListNode statements) {

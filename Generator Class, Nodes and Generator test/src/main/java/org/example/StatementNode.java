@@ -1,14 +1,14 @@
 package org.example;
 
-public class StatementNode extends Node {
+public class StatementNode {
     private AssignmentStatementNode assign;
-    private ExpressionStatement expressionStatement;
     private WhileNode whileNode;
     private IfStatement ifStatement;
     private ReturnStatement returnStatement;
     private DeclarationStatement declarationStatement;
     private MethodDeclarationStatement methodDeclarationStatement;
     private OutputStatement outputStatement;
+    private MethodCall methodCall;
 
     public StatementNode(MethodDeclarationStatement methodDeclarationStatement) {
         this.methodDeclarationStatement = methodDeclarationStatement;
@@ -20,10 +20,6 @@ public class StatementNode extends Node {
 
     public StatementNode(AssignmentStatementNode assign) {
         this.assign = assign;
-    }
-
-    public StatementNode(ExpressionStatement expressionStatement) {
-        this.expressionStatement = expressionStatement;
     }
 
     public StatementNode(WhileNode whileNode) {
@@ -42,13 +38,14 @@ public class StatementNode extends Node {
         this.outputStatement = outputStatement;
     }
 
+    public StatementNode(MethodCall methodCall) {
+        this.methodCall = methodCall;
+    }
+
     public AssignmentStatementNode getAssign() {
         return assign;
     }
 
-    public ExpressionStatement getExpressionStatement() {
-        return expressionStatement;
-    }
 
     public WhileNode getWhile() {
         return whileNode;
@@ -72,6 +69,9 @@ public class StatementNode extends Node {
 
     public OutputStatement getOutput() {
         return outputStatement;
+    }
+    public MethodCall getMethod(){
+        return methodCall;
     }
 
     public void accept(CodeGeneratorVisitor visitor) {

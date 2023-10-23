@@ -1,6 +1,6 @@
 package org.example;
 
-public class MethodDeclarationStatement extends Node {
+public class MethodDeclarationStatement {
     private final IdentifierNode identifierNode;
     private ParameterListNode parameterListNode;
     private final BlockStatement blockStatement;
@@ -28,7 +28,6 @@ public class MethodDeclarationStatement extends Node {
         return blockStatement;
     }
 
-    @Override
     public void accept(CodeGeneratorVisitor visitor) {
         visitor.visit(this);
     }

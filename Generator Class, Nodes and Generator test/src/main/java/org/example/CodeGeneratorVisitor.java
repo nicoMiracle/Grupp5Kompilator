@@ -21,7 +21,6 @@ public interface CodeGeneratorVisitor {
 
     void visit(AdditionNode additionNode);
 
-    void visit(ExpressionStatement expressionStatement);
 
     void visit(SubtractionNode subtractionNode);
 

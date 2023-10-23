@@ -1,6 +1,6 @@
 package org.example;
 
-public class AdditionNode extends Node {
+public class AdditionNode {
     private final TermNode firstTermNode;
     private final TermNode secondTermNode;
 

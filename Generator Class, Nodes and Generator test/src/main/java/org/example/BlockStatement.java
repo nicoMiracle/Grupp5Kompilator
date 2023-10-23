@@ -1,6 +1,6 @@
 package org.example;
 
-public class BlockStatement extends Node {
+public class BlockStatement {
     private final StatementListNode statementListNode;
 
     public BlockStatement(StatementListNode statementListNode) {
@@ -11,7 +11,6 @@ public class BlockStatement extends Node {
         return statementListNode;
     }
 
-    @Override
     public void accept(CodeGeneratorVisitor visitor) {
         visitor.visit(this);
     }

@@ -1,6 +1,6 @@
 package org.example;
 
-public class ReturnStatement extends Node {
+public class ReturnStatement {
     private final ExpressionNode expressionNode;
 
     public ReturnStatement(ExpressionNode expressionNode) {
@@ -11,7 +11,6 @@ public class ReturnStatement extends Node {
         return expressionNode;
     }
 
-    @Override
     public void accept(CodeGeneratorVisitor visitor) {
         visitor.visit(this);
     }

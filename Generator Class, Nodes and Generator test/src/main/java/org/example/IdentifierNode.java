@@ -1,6 +1,6 @@
 package org.example;
 
-public class IdentifierNode extends Node {
+public class IdentifierNode {
     private final String name;
 
     public IdentifierNode(String name) {

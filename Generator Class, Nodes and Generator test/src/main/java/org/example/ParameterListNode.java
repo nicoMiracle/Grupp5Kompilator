@@ -2,7 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 
-public class ParameterListNode extends Node {
+public class ParameterListNode {
     private final ArrayList<ParameterNode> parameterNodes;
 
     public ParameterListNode() {
@@ -17,7 +17,6 @@ public class ParameterListNode extends Node {
         parameterNodes.add(parameterNode);
     }
 
-    @Override
     public void accept(CodeGeneratorVisitor visitor) {
         visitor.visit(this);
     }
