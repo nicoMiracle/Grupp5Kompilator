@@ -1,6 +1,4 @@
 package org.example;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -44,18 +42,85 @@ public class Parser {
         }else if(tokens.get(position).getType().equals(TokenType.TYPE_INT) || tokens.get(position).getType().equals(TokenType.TYPE_STRING)){
             String dataType = tokens.get(position).getLexeme(); //int
             position++;
+            if (tokens.get(position).getType().equals(TokenType.IDENTIFIER) && tokens.get(position+1).getType().equals(TokenType.LPAREN)) {
+                return new StatementNode(parseMethodDeclarationStatement(dataType));
+            }
             return new StatementNode(parseDeclarationStatement(dataType));
         }else if(tokens.get(position).getType().equals(TokenType.KEYWORD_IF)){
             return new StatementNode(parseIfStatement());
         }else if(tokens.get(position).getType().equals(TokenType.KEYWORD_WHILE)){
             return new StatementNode(parseWhileStatement());
+        }else if(tokens.get(position).getType().equals(TokenType.FUNCTION_RETURN)){
+            position++;
+            return new StatementNode(parseReturnStatement());
+        }else if(tokens.get(position).getType().equals(TokenType.SYSTEM)){
+            position++;
+            return new StatementNode(parseOutputStatement());
         }else{
             throw new ParseException("Unexpected token: " + tokens.get(position).getLexeme() + " on line " + tokens.get(position).getLine());
         }
-
         return null;
     }
 
+    private MethodDeclarationStatement parseMethodDeclarationStatement(String dataType){
+        TypeNode type = parseTypeNode(dataType);
+        IdentifierNode identifierFirstNode = parseIdentifierNode(tokens.get(position).getLexeme());
+        position++;
+        match(TokenType.LPAREN);
+        ParameterListNode parameter = parseParameterListNode();
+        position++;
+        match(TokenType.RPAREN);
+        BlockStatement block = parseBlockStatement();
+        return new MethodDeclarationStatement(type, identifierFirstNode, parameter, block);
+    }
+
+    private ParameterListNode parseParameterListNode(){
+        ParameterListNode parameterListNode = new ParameterListNode();
+        while(position<tokens.size() && tokens.get(position+1).getType()!=(TokenType.RPAREN) ){
+            parameterListNode.addParameter(parseParameterNode());
+        }
+        return parameterListNode;
+
+    }
+
+    private OutputStatement parseOutputStatement(){
+        match(TokenType.DOT);
+        match(TokenType.OUT);
+        match(TokenType.DOT);
+        match(TokenType.PRINT);
+        match(TokenType.LPAREN);
+        ExpressionNode expressionNode = parseExpression();
+        match(TokenType.RPAREN);
+        return new OutputStatement(expressionNode);
+    }
+
+    private ParameterNode parseParameterNode(){
+        TypeNode typeNode = new TypeNode(tokens.get(position).getLexeme());
+        position++;
+        IdentifierNode identifierNode = parseIdentifierNode(tokens.get(position).getLexeme());
+        return new ParameterNode(typeNode, identifierNode);
+    }
+
+    private MethodCall parseMethodCall(){
+        IdentifierNode identifierFirstNode = parseIdentifierNode(tokens.get(position-1).getLexeme());
+        if (tokens.get(position).getType().equals(TokenType.LPAREN)){
+            ExpressionNode expressionNode = parseExpression();
+            match(TokenType.RPAREN);
+            return new MethodCall(identifierFirstNode, expressionNode);
+        }else if(tokens.get(position).getType().equals(TokenType.DOT)){
+            position++;
+            IdentifierNode identifierSecondNode = parseIdentifierNode(tokens.get(position).getLexeme());
+            position++;
+            match(TokenType.LPAREN);
+            ExpressionNode expressionNode = parseExpression();
+            match(TokenType.RPAREN);
+            match(TokenType.SEMICOLON);
+            return new MethodCall(identifierFirstNode, identifierSecondNode, expressionNode);
+        }else {
+            throw new ParseException("Unexpected token: " + tokens.get(position).getLexeme() + " on line " + tokens.get(position).getLine());
+        }
+
+    }
 
     private DeclarationStatement parseDeclarationStatement(String dataType) {
         TypeNode typeNode = parseTypeNode(dataType);
@@ -75,11 +140,18 @@ public class Parser {
     public AssignmentStatementNode parseAssignmentStatementNode(String identifier){
         IdentifierNode identifierNode = parseIdentifierNode(identifier);
 
-        if(tokens.get(position).getType().equals(TokenType.INTEGER_LITERAL)) {
+        if(tokens.get(position).getType().equals(TokenType.INTEGER_LITERAL)
+                || tokens.get(position).getType().equals(TokenType.STRING_LITERAL)
+                || tokens.get(position).getType().equals(TokenType.IDENTIFIER)) {
             position++;
             if (tokens.get(position).getType().equals(TokenType.PLUS) || tokens.get(position).getType().equals(TokenType.MINUS)) {
                 ExpressionNode expressionNode = parseAdditionSubtractionExpression();
                 return new AssignmentStatementNode(identifierNode,expressionNode);
+            }else if (tokens.get(position).getType().equals(TokenType.EQUAL)) {
+                ExpressionNode expressionNode = new ExpressionNode(parseEquals());
+                return new AssignmentStatementNode(identifierNode, expressionNode);
+            }else if (tokens.get(position).getType().equals(TokenType.LPAREN) || tokens.get(position).getType().equals(TokenType.DOT)){
+                return new AssignmentStatementNode(identifierNode, parseExpression());
             }
         }
         ExpressionNode expressionNode = parseExpression();
@@ -92,18 +164,9 @@ public class Parser {
         return new ExpressionNode(parseTermNode());
     }
 
-    /*
-    else if(tokens.get(position).getType().equals(TokenType.INTEGER_LITERAL)){
-            position++;
-            if (tokens.get(position).getType().equals(TokenType.PLUS) || tokens.get(position).getType().equals(TokenType.MINUS)){
-                ExpressionNode expressionNode = parseAdditionSubtractionExpression();
-                ExpressionStatement expressionStatement = new ExpressionStatement(expressionNode);
-                return new StatementNode(expressionStatement);
-            }
-        }
-     */
 
     public TermNode parseTermNode(){
+
         if(tokens.get(position).getType().equals(TokenType.INTEGER_LITERAL)){
             IntegerLiteralNode integerLiteralNode = parseInteger(tokens.get(position).getLexeme());
             position++;
@@ -115,13 +178,48 @@ public class Parser {
         }else if(tokens.get(position).getType().equals(TokenType.IDENTIFIER)){
             IdentifierNode identifierNode = parseIdentifierNode(tokens.get(position).getLexeme());
             position++;
+            if (position< tokens.size()
+                    && ((tokens.get(position).getType().equals(TokenType.LPAREN)) || tokens.get(position + 1).getType().equals(TokenType.DOT))) {
+                return new TermNode(parseMethodCall());
+            }
             return new TermNode(identifierNode);
+        }else if(tokens.get(position).getType().equals(TokenType.INPUT)){
+            position++;
+            return new TermNode(parseInputStatement());
         }else {
-           return null;
+            return null;
+        }
+    }
+
+    private InputStatement parseInputStatement(){
+        match(TokenType.DOT);
+        match(TokenType.NEXTLINE);
+        match(TokenType.LPAREN);
+        match(TokenType.RPAREN);
+        return new InputStatement();
+    }
+
+    private ReturnStatement parseReturnStatement(){
+        if(tokens.get(position).getType().equals(TokenType.INTEGER_LITERAL)
+                || tokens.get(position).getType().equals(TokenType.STRING_LITERAL)
+                || tokens.get(position).getType().equals(TokenType.IDENTIFIER)) {
+            position++;
+            if (tokens.get(position).getType().equals(TokenType.PLUS) || tokens.get(position).getType().equals(TokenType.MINUS)) {
+                ExpressionNode expressionNode = parseAdditionSubtractionExpression();
+                return new ReturnStatement(expressionNode);
+            }else if (tokens.get(position).getType().equals(TokenType.EQUAL)) {
+                ExpressionNode expressionNode = new ExpressionNode(parseEquals());
+                return new ReturnStatement(expressionNode);
+            }else if (tokens.get(position).getType().equals(TokenType.LPAREN) || tokens.get(position).getType().equals(TokenType.DOT)){
+                return new ReturnStatement(parseExpression());
+            }
         }
 
-
+        ExpressionNode expressionNode = parseExpression();
+        match(TokenType.SEMICOLON);
+        return new ReturnStatement(expressionNode);
     }
+
 
     private ExpressionNode parseAdditionSubtractionExpression() {
         position--;
@@ -130,7 +228,6 @@ public class Parser {
         while (tokens.get(position).getType().equals(TokenType.PLUS) || tokens.get(position).getType().equals(TokenType.MINUS)) {
             Token operator = tokens.get(position);
             position++;
-
             TermNode rightTerm = parseTermNode();
             ExpressionNode binaryExpression;
             if (operator.getType() == TokenType.PLUS) {
@@ -182,7 +279,6 @@ public class Parser {
     }
 
 
-
     private TypeNode parseTypeNode(String type){
         return new TypeNode(type);
     }
@@ -210,4 +306,8 @@ public class Parser {
         }
     }
 }
+
+
+
+
 
