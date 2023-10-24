@@ -7,6 +7,11 @@ public enum TokenType {
     ELSE,
     WHILE,
     FUNCTION,
+    OUT,
+    PRINTLN,
+    INPUT,
+    NEXT_LINE,
+    SYSTEM,
 
     // Types
     TYPE_INT,
@@ -43,7 +48,7 @@ public enum TokenType {
     FUNCTION_RETURN,
 
     // End of File
-    EOF,
+    SEMICOLON,
     COMMA,
     DOT
     }
