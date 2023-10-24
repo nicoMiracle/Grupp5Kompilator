@@ -26,7 +26,21 @@ public class ParserTest {
         assertEquals(0, parser.getPosition(), "Parser should start with position 0");
     }
 
-    //
+    @Test
+    public void testParseStatementListAndProgramNode() {
+        // Create a list of tokens to pass to the parser
+        List<Token> tokens = new ArrayList<>();
+        tokens.add(new Token(TokenType.IDENTIFIER, "x", 3));
+        tokens.add(new Token(TokenType.ASSIGN, "=", 3));
+        tokens.add(new Token(TokenType.INTEGER_LITERAL, "10", 3));
+        tokens.add(new Token(TokenType.SEMICOLON, ";", 3));
+
+        Parser parser = new Parser(tokens);
+        ProgramNode programNode = parser.parseProgram();
+        assertEquals(1, programNode.getStatements().getStatementNodes().size());
+    }
+
+
     @Test
     @DisplayName("Test Assignment statement node with integervalue")
     void testParseAssignmentStatementWithIntValue() {
@@ -61,12 +75,28 @@ public class ParserTest {
     }
 
     @Test
-    @DisplayName("Test if it throws Parser exception in statement node with no value")
+    @DisplayName("Test if it throws Parser exception in statement node with invalid statement syntax")
     void testIfParseStatementNodeThrowsException() {
 
-        //x;
+        //x)
         List<Token> tokens = new ArrayList<>();
         tokens.add(new Token(TokenType.IDENTIFIER, "x", 3));
+        tokens.add(new Token(TokenType.RPAREN, ")", 3));
+
+        parser = new Parser(tokens);
+        assertThrows( ParseException.class, () -> {
+            parser.parseStatementNode();
+        });
+    }
+
+    @Test
+    @DisplayName("Test if it throws Parser exception in statement node with invalid statement syntax")
+    void testIfParseStatementNodeThrowsExceptionWithInvalidStatement() {
+
+        //x
+        List<Token> tokens = new ArrayList<>();
+        tokens.add(new Token(TokenType.IDENTIFIER, "x", 3));
+        tokens.add(new Token(TokenType.RPAREN, ")", 3));
         tokens.add(new Token(TokenType.SEMICOLON, ";", 3));
 
         parser = new Parser(tokens);
@@ -234,8 +264,49 @@ public class ParserTest {
     }
 
     @Test
+    @DisplayName("Test method call statement if throws with invalid syntax")
+    void testIfMethodCallThrowsException() {
+
+        List<Token> tokens = new ArrayList<>();
+
+        // y =  get(x;
+
+        tokens.add(new Token(TokenType.IDENTIFIER,"y",2));
+        tokens.add(new Token(TokenType.ASSIGN,"=",2));
+        tokens.add(new Token(TokenType.IDENTIFIER, "get", 4));
+        tokens.add(new Token(TokenType.LPAREN, "(", 5));
+        tokens.add(new Token(TokenType.IDENTIFIER,"x",8));
+        tokens.add(new Token(TokenType.SEMICOLON, ";", 4));
+
+        parser = new Parser(tokens);
+        assertThrows( ParseException.class, () -> {
+            parser.parseStatementNode();
+        });
+    }
+
+    @Test
+    @DisplayName("Test method call as statement")
+    void testMethodCallAsStatement() {
+
+        List<Token> tokens = new ArrayList<>();
+
+        // get(x);
+
+        tokens.add(new Token(TokenType.IDENTIFIER, "get", 4));
+        tokens.add(new Token(TokenType.LPAREN, "(", 5));
+        tokens.add(new Token(TokenType.IDENTIFIER,"x",8));
+        tokens.add(new Token(TokenType.RPAREN, ")", 5));
+        tokens.add(new Token(TokenType.SEMICOLON, ";", 4));
+
+        parser = new Parser(tokens);
+        assertDoesNotThrow( () -> {
+            parser.parseStatementNode();
+        });
+    }
+
+    @Test
     @DisplayName("Test ParseAssignmentStatement and String concatenation using parseAdditionSubtractionExpression method")
-    public void testParseAssignmentStatementAndStringConcatenation() {
+    public void testParsePositiveTermWithStringConcatenation() {
 
         List<Token> tokens = new ArrayList<>();
         /*
@@ -248,6 +319,72 @@ public class ParserTest {
         tokens.add(new Token(TokenType.STRING_LITERAL, "\"Hello\"", 4));
         tokens.add(new Token(TokenType.PLUS, "+", 5));
         tokens.add(new Token(TokenType.STRING_LITERAL, "\"Furti\"", 6));
+        tokens.add(new Token(TokenType.SEMICOLON, ";", 7));
+
+        parser = new Parser(tokens);
+        assertDoesNotThrow( () -> {
+            parser.parseStatementNode();
+        });
+    }
+
+    @Test
+    @DisplayName("Test ParseAssignmentStatement and negative term with multiple  value")
+    public void testParseNegativeTermWithStringValue() {
+
+        List<Token> tokens = new ArrayList<>();
+        /*
+        String str = "Hello" - x - 5 - input.nextLine() - get(x);
+         */
+        tokens.add(new Token(TokenType.TYPE_STRING, "String", 1));
+        tokens.add(new Token(TokenType.IDENTIFIER, "str", 2));
+        tokens.add(new Token(TokenType.ASSIGN, "=", 3));
+        tokens.add(new Token(TokenType.STRING_LITERAL, "\"Hello\"", 4));
+        tokens.add(new Token(TokenType.MINUS, "-", 5));
+        tokens.add(new Token(TokenType.IDENTIFIER,"x",6));
+        tokens.add(new Token(TokenType.MINUS, "-", 5));
+        tokens.add(new Token(TokenType.IDENTIFIER, "get", 4));
+        tokens.add(new Token(TokenType.LPAREN, "(", 5));
+        tokens.add(new Token(TokenType.IDENTIFIER,"z",8));
+        tokens.add(new Token(TokenType.RPAREN, ")", 5));
+        tokens.add(new Token(TokenType.MINUS, "-", 5));
+        tokens.add(new Token(TokenType.INPUT, "input", 4));
+        tokens.add(new Token(TokenType.DOT, ".", 4));
+        tokens.add(new Token(TokenType.NEXTLINE, "nextLine", 4));
+        tokens.add(new Token(TokenType.LPAREN, "(", 5));
+        tokens.add(new Token(TokenType.RPAREN, ")", 5));
+        tokens.add(new Token(TokenType.SEMICOLON, ";", 7));
+
+        parser = new Parser(tokens);
+        assertDoesNotThrow( () -> {
+            parser.parseStatementNode();
+        });
+    }
+
+    @Test
+    @DisplayName("Test ParseAssignmentStatement and negative term multiple  value")
+    public void testParsePositiveTermWithMultipleValue() {
+
+        List<Token> tokens = new ArrayList<>();
+        /*
+        String str = "Hello" + x + 5 + input.nextLine() + get(x);
+         */
+        tokens.add(new Token(TokenType.TYPE_STRING, "String", 1));
+        tokens.add(new Token(TokenType.IDENTIFIER, "str", 2));
+        tokens.add(new Token(TokenType.ASSIGN, "=", 3));
+        tokens.add(new Token(TokenType.STRING_LITERAL, "\"Hello\"", 4));
+        tokens.add(new Token(TokenType.PLUS, "+", 5));
+        tokens.add(new Token(TokenType.IDENTIFIER,"x",6));
+        tokens.add(new Token(TokenType.PLUS, "+", 5));
+        tokens.add(new Token(TokenType.IDENTIFIER, "get", 4));
+        tokens.add(new Token(TokenType.LPAREN, "(", 5));
+        tokens.add(new Token(TokenType.IDENTIFIER,"z",8));
+        tokens.add(new Token(TokenType.RPAREN, ")", 5));
+        tokens.add(new Token(TokenType.PLUS, "+", 5));
+        tokens.add(new Token(TokenType.INPUT, "input", 4));
+        tokens.add(new Token(TokenType.DOT, ".", 4));
+        tokens.add(new Token(TokenType.NEXTLINE, "nextLine", 4));
+        tokens.add(new Token(TokenType.LPAREN, "(", 5));
+        tokens.add(new Token(TokenType.RPAREN, ")", 5));
         tokens.add(new Token(TokenType.SEMICOLON, ";", 7));
 
         parser = new Parser(tokens);
@@ -276,6 +413,9 @@ public class ParserTest {
     @DisplayName("Test Declaration Statement node with string type and with out initial value")
     void testParseDeclarationStatementWithIntType() {
 
+        /*
+        string = "Hello";
+         */
         List<Token> tokens = new ArrayList<>();
         tokens.add(new Token(TokenType.IDENTIFIER, "string", 4));
         tokens.add(new Token(TokenType.ASSIGN, "=", 4));
@@ -293,6 +433,10 @@ public class ParserTest {
     void testParseDeclarationStatementWithStringvalue() {
 
         List<Token> tokens = new ArrayList<>();
+
+        /*
+        String str = "Hello";
+         */
         tokens.add(new Token(TokenType.TYPE_STRING,"String",1));
         tokens.add(new Token(TokenType.IDENTIFIER,"str",1));
         tokens.add(new Token(TokenType.ASSIGN,"=",1));
@@ -633,6 +777,8 @@ public class ParserTest {
         tokens.add(new Token(TokenType.RIGHT_BRACE, "}", 7));
 
         parser = new Parser(tokens);
+
+
         assertDoesNotThrow( () -> {
             parser.parseStatementNode();
         });
@@ -727,6 +873,28 @@ public class ParserTest {
         tokens.add(new Token(TokenType.IDENTIFIER,"x",8));
         tokens.add(new Token(TokenType.RPAREN, ")", 5));
         tokens.add(new Token(TokenType.SEMICOLON, ";", 4));
+
+        parser = new Parser(tokens);
+        assertDoesNotThrow( () -> {
+            parser.parseStatementNode();
+        });
+    }
+
+    @Test
+    @DisplayName("Test MethodCall with instance  ")
+    public void testMethodCallWithInstance() {
+
+        List<Token> tokens = new ArrayList<>();
+        /*
+         x.get(x);
+         */
+        tokens.add(new Token(TokenType.IDENTIFIER, "x", 4));
+        tokens.add(new Token(TokenType.DOT, ".", 4));
+        tokens.add(new Token(TokenType.IDENTIFIER, "get", 3));
+        tokens.add(new Token(TokenType.LPAREN, "(", 5));
+        tokens.add(new Token(TokenType.IDENTIFIER,"name",8));
+        tokens.add(new Token(TokenType.RPAREN, ")", 5));
+        tokens.add(new Token(TokenType.SEMICOLON, ";", 9));
 
         parser = new Parser(tokens);
         assertDoesNotThrow( () -> {
@@ -831,4 +999,7 @@ public class ParserTest {
             parser.parseStatementNode();
         });
     }
+
 }
+
+
