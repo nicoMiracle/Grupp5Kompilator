@@ -31,7 +31,6 @@ public class Parser {
     }
 
     public StatementNode parseStatementNode() {
-
         if(tokens.get(position).getType().equals(TokenType.CONTROL_IF)){
             return new StatementNode(parseIfStatement());
         }else if(tokens.get(position).getType().equals(TokenType.CONTROL_WHILE)){
@@ -43,12 +42,12 @@ public class Parser {
             String identifier = tokens.get(position).getLexeme();
             if (position< tokens.size()){
                 position++;
-                if(match(TokenType.ASSIGN)){
+                if(tokens.get(position).getType().equals(TokenType.ASSIGN)){
+                    position++;
                     return new StatementNode(parseAssignmentStatementNode(identifier));
                 }else if ((tokens.get(position).getType().equals(TokenType.LPAREN))
-                        || tokens.get(position + 1).getType().equals(TokenType.DOT)) {
-                    position++;
-                    return new StatementNode(parseMethodCall());
+                        || tokens.get(position).getType().equals(TokenType.DOT)) {
+                    return new StatementNode(parseMethodCall(identifier));
                 }else{
                     throw new ParseException("Unexpected token: " + tokens.get(position).getLexeme() + " on line " + tokens.get(position).getLine());
                 }
@@ -130,8 +129,8 @@ public class Parser {
         return new OutputStatement(expressionNode);
     }
 
-    private MethodCall parseMethodCall(){
-        IdentifierNode identifierFirstNode = parseIdentifierNode(tokens.get(position-1).getLexeme());
+    private MethodCall parseMethodCall(String identifier){
+        IdentifierNode identifierFirstNode = parseIdentifierNode(identifier);
         if (tokens.get(position).getType().equals(TokenType.LPAREN)){
             position++;
             ExpressionNode expressionNode = parseExpression();
@@ -194,13 +193,12 @@ public class Parser {
             return  new TermNode(stringLiteralNode);
         }else if (position < tokens.size() && tokens.get(position).getType().equals(TokenType.IDENTIFIER)) {
             IdentifierNode identifierNode = parseIdentifierNode(tokens.get(position).getLexeme());
+            String id = tokens.get(position).getLexeme();
             position++;
-
             if (position < tokens.size() && (tokens.get(position).getType().equals(TokenType.LPAREN) ||
-                    (position + 1 < tokens.size() && tokens.get(position + 1).getType().equals(TokenType.DOT)))) {
-                return new TermNode(parseMethodCall());
+                     tokens.get(position).getType().equals(TokenType.DOT))) {
+                return new TermNode(parseMethodCall(id));
             }
-
             return new TermNode(identifierNode);
         }
         else if(tokens.get(position).getType().equals(TokenType.INPUT)){
@@ -216,7 +214,6 @@ public class Parser {
             throw new ParseException("Unexpected token: " + tokens.get(position).getLexeme() + " on line " + tokens.get(position).getLine());
         }
     }
-
     private PositiveTermNode parsePositiveTerm(){
         TermNode termNode = parseTermNode();
         if(termNode.getIdentifierNode()!=null){
@@ -233,8 +230,6 @@ public class Parser {
             throw new ParseException("Invalid token efter Plus: " + tokens.get(position).getLexeme() + " on line " + tokens.get(position).getLine());
         }
     }
-
-
     private NegativeTerm parseNegativeTerm(){
         TermNode termNode = parseTermNode();
         if(termNode.getIdentifierNode()!=null){
@@ -243,17 +238,15 @@ public class Parser {
             return new NegativeTerm(termNode.getIntegerLiteralNode());
         }else  if(termNode.getStringLiteralNode()!=null){
             return new NegativeTerm(termNode.getStringLiteralNode());
-        }else  if(termNode.getInput()!=null){
+        }
+        else  if(termNode.getInput()!=null){
             return new NegativeTerm(termNode.getInput());
         }else  if(termNode.getMethodCall()!=null){
             return new NegativeTerm(termNode.getMethodCall());
         }else{
             throw new ParseException("Invalid token efter Minus : " + tokens.get(position).getLexeme() + " on line " + tokens.get(position).getLine());
         }
-
     }
-
-
     private WhileNode parseWhileStatement() {
         match(TokenType. CONTROL_WHILE); // Match the "if" keyword
         match(TokenType.LPAREN); // Match the opening parenthesis
@@ -263,7 +256,7 @@ public class Parser {
         return new WhileNode(condition, thenBranch);
     }
 
-    private IfStatement parseIfStatement() {
+    public IfStatement parseIfStatement() {
         match(TokenType.CONTROL_IF); // Match the "if" keyword
         match(TokenType.LPAREN); // Match the opening parenthesis
         ExpressionNode condition = parseExpression(); // Parse the condition
@@ -271,7 +264,6 @@ public class Parser {
         BlockStatement thenBranch = parseBlockStatement(); // Parse the "then" branch
         return new IfStatement(condition, thenBranch);
     }
-
     private InputStatement parseInputStatement(){
         match(TokenType.DOT);
         match(TokenType.NEXTLINE);
@@ -279,18 +271,15 @@ public class Parser {
         match(TokenType.RPAREN);
         return new InputStatement();
     }
-
     private EqualsNode parseEquals() {
         TermNode leftOperand = parseTermNode(); // Parse a VariableNode as the left operand
         match(TokenType.EQUAL);
         TermNode rightOperand = parseTermNode();
         return new EqualsNode(leftOperand, rightOperand);
     }
-
     private BlockStatement parseBlockStatement(){
         StatementListNode statementListNode = new StatementListNode();
         match(TokenType.LEFT_BRACE);
-
         while (position < tokens.size() && tokens.get(position).getType() != TokenType.RIGHT_BRACE) {
             statementListNode.addStatement(parseStatementNode());
         }
@@ -303,23 +292,25 @@ public class Parser {
         return new IntegerLiteralNode(Integer.parseInt(integer));
     }
 
-    private StringLiteralNode parseString(String string){
+
+    private StringLiteralNode parseString(String string) {
         return new StringLiteralNode(string);
     }
+
 
     private IdentifierNode parseIdentifierNode(String identifier){
         return new IdentifierNode(identifier);
     }
 
-    private boolean match(TokenType expectedType) {
+    private void match(TokenType expectedType) {
         Token token = tokens.get(position);
         if (token.getType() == expectedType) {
             position++;
-            return true; // Match successful
         } else {
             throw new ParseException("Expected " + expectedType + " but found " + token.getType() + " on line " + token.getLine());
         }
     }
+
 }
 
 
