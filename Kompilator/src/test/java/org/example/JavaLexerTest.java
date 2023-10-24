@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JavaLexerTest {
     private JavaLexer lexer;
@@ -31,7 +31,7 @@ public class JavaLexerTest {
 
     @Test
     public void testGetTextBetweenQuotation() throws Exception {
-        Method method = JavaLexer.class.getDeclaredMethod("getTextBetweenQuotation", String.class, int.class);
+        Method method = JavaLexer.class.getDeclaredMethod("getTextBetweenQuotationMarks", String.class, int.class);
         method.setAccessible(true);
 
         String input1 = "This is a \"test\".";
@@ -67,6 +67,15 @@ public class JavaLexerTest {
 
 
     @Test
+    public void testEmptyStringLex() {
+        JavaLexer lexer = new JavaLexer();
+        String input = "";
+
+        List<Token> tokens = lexer.lex(input);
+
+        assertTrue(tokens.isEmpty());
+    }
+    @Test
     public void testEmptyStringAssignment() {
         JavaLexer lexer = new JavaLexer();
         String input = "String str = \"\";";
@@ -76,7 +85,7 @@ public class JavaLexerTest {
                 new Token(TokenType.IDENTIFIER, "str", 1),
                 new Token(TokenType.ASSIGN, "=", 1),
                 new Token(TokenType.STRING_LITERAL, "", 1),
-                new Token(TokenType.EOF, ";", 1)
+                new Token(TokenType.SEMICOLON, ";", 1)
         };
         List<Token> actualTokens = lexer.lex(input);
 
@@ -91,14 +100,14 @@ public class JavaLexerTest {
         String input = "System.out.println();";
 
         Token[] expectedTokens = {
-                new Token(TokenType.IDENTIFIER, "System", 1),
+                new Token(TokenType.SYSTEM, "System", 1),
                 new Token(TokenType.DOT, ".", 1),
-                new Token(TokenType.IDENTIFIER, "out", 1),
+                new Token(TokenType.OUT, "out", 1),
                 new Token(TokenType.DOT, ".", 1),
-                new Token(TokenType.IDENTIFIER, "println", 1),
+                new Token(TokenType.PRINTLN, "println", 1),
                 new Token(TokenType.LPAREN, "(", 1),
                 new Token(TokenType.RPAREN, ")", 1),
-                new Token(TokenType.EOF, ";", 1)
+                new Token(TokenType.SEMICOLON, ";", 1)
         };
 
         List<Token> actualTokens = lexer.lex(input);
@@ -116,15 +125,15 @@ public class JavaLexerTest {
         List<Token> actualTokens = lexer.lex(input);
 
         List<Token> expectedTokens = Arrays.asList(
-                new Token(TokenType.IDENTIFIER, "System", 1),
+                new Token(TokenType.SYSTEM, "System", 1),
                 new Token(TokenType.DOT, ".", 1),
-                new Token(TokenType.IDENTIFIER, "out", 1),
+                new Token(TokenType.OUT, "out", 1),
                 new Token(TokenType.DOT, ".", 1),
-                new Token(TokenType.IDENTIFIER, "println", 1),
+                new Token(TokenType.PRINTLN, "println", 1),
                 new Token(TokenType.LPAREN, "(", 1),
                 new Token(TokenType.STRING_LITERAL, "Hello, World!", 1),
                 new Token(TokenType.RPAREN, ")", 1),
-                new Token(TokenType.EOF, ";", 1)
+                new Token(TokenType.SEMICOLON, ";", 1)
         );
 
         assertThat(actualTokens, IsIterableContainingInOrder.contains(expectedTokens.toArray()));
@@ -139,7 +148,7 @@ public class JavaLexerTest {
                 new Token(TokenType.IDENTIFIER, "x",1),
                 new Token(TokenType.ASSIGN, "=",1),
                 new Token(TokenType.INTEGER_LITERAL, "42",1),
-                new Token(TokenType.EOF, ";",1)
+                new Token(TokenType.SEMICOLON, ";",1)
         );
         assertThat(tokens, IsIterableContainingInOrder.contains(expectedTokens.toArray()));
     }
@@ -153,7 +162,7 @@ public class JavaLexerTest {
                 new Token(TokenType.IDENTIFIER, "x",1),
                 new Token(TokenType.ASSIGN, "=",1),
                 new Token(TokenType.INTEGER_LITERAL, "42",1),
-                new Token(TokenType.EOF, ";",1)
+                new Token(TokenType.SEMICOLON, ";",1)
         );
 
         List<Token> actualTokens = lexer.lex(input);
@@ -178,7 +187,7 @@ public class JavaLexerTest {
                 new Token(TokenType.IDENTIFIER, "a",1),
                 new Token(TokenType.PLUS, "+",1),
                 new Token(TokenType.IDENTIFIER, "b",1),
-                new Token(TokenType.EOF, ";",1),
+                new Token(TokenType.SEMICOLON, ";",1),
                 new Token(TokenType.RBRACE, "}",2)
         );
         assertThat(tokens, IsIterableContainingInOrder.contains(expectedTokens.toArray()));
@@ -203,7 +212,7 @@ public class JavaLexerTest {
                 new Token(TokenType.IDENTIFIER, "a", 1),
                 new Token(TokenType.MINUS, "-", 1),
                 new Token(TokenType.IDENTIFIER, "b", 1),
-                new Token(TokenType.EOF, ";", 1),
+                new Token(TokenType.SEMICOLON, ";", 1),
                 new Token(TokenType.RBRACE, "}", 2)
         );
 
@@ -224,7 +233,7 @@ public class JavaLexerTest {
                 new Token(TokenType.IDENTIFIER, "getInt", 1),
                 new Token(TokenType.LPAREN, "(", 1),
                 new Token(TokenType.RPAREN, ")", 1),
-                new Token(TokenType.EOF, ";", 1)
+                new Token(TokenType.SEMICOLON, ";", 1)
         );
 
         List<Token> actualTokens = lexer.lex(input);
@@ -241,7 +250,7 @@ public class JavaLexerTest {
                 new Token(TokenType.IDENTIFIER, "i", 1),
                 new Token(TokenType.ASSIGN, "=", 1),
                 new Token(TokenType.INTEGER_LITERAL, "0", 1),
-                new Token(TokenType.EOF, ";", 1),
+                new Token(TokenType.SEMICOLON, ";", 1),
                 new Token(TokenType.WHILE, "while", 2),
                 new Token(TokenType.LPAREN, "(", 2),
                 new Token(TokenType.IDENTIFIER, "i", 2),
@@ -254,13 +263,13 @@ public class JavaLexerTest {
                 new Token(TokenType.IDENTIFIER, "a", 2),
                 new Token(TokenType.PLUS, "+", 2),
                 new Token(TokenType.INTEGER_LITERAL, "5", 2),
-                new Token(TokenType.EOF, ";", 2),
+                new Token(TokenType.SEMICOLON, ";", 2),
                 new Token(TokenType.IDENTIFIER, "i", 3),
                 new Token(TokenType.ASSIGN, "=", 3),
                 new Token(TokenType.IDENTIFIER, "i", 3),
                 new Token(TokenType.PLUS, "+", 3),
                 new Token(TokenType.INTEGER_LITERAL, "1", 3),
-                new Token(TokenType.EOF, ";", 3),
+                new Token(TokenType.SEMICOLON, ";", 3),
                 new Token(TokenType.RBRACE, "}", 4)
         };
 
@@ -270,4 +279,45 @@ public class JavaLexerTest {
             assertEquals(expectedTokens[i], actualTokens.get(i));
         }
     }
+
+    @Test
+    public void testInputAndNextLine() {
+        JavaLexer lexer = new JavaLexer();
+        String input = "x = input.nextLine(); while(i==true){System.out.println(x);}";
+
+        Token[] expectedTokens = {
+                new Token(TokenType.IDENTIFIER, "x", 1),
+                new Token(TokenType.ASSIGN, "=", 1),
+                new Token(TokenType.INPUT, "input", 1),
+                new Token(TokenType.DOT, ".", 1),
+                new Token(TokenType.NEXT_LINE, "nextLine", 1),
+                new Token(TokenType.LPAREN, "(", 1),
+                new Token(TokenType.RPAREN, ")", 1),
+                new Token(TokenType.SEMICOLON, ";", 1),
+                new Token(TokenType.WHILE, "while", 2),
+                new Token(TokenType.LPAREN, "(", 2),
+                new Token(TokenType.IDENTIFIER, "i", 2),
+                new Token(TokenType.EQUAL, "==", 2),
+                new Token(TokenType.IDENTIFIER, "true", 2),
+                new Token(TokenType.RPAREN, ")", 2),
+                new Token(TokenType.LBRACE, "{", 2),
+                new Token(TokenType.SYSTEM, "System", 2),
+                new Token(TokenType.DOT, ".", 2),
+                new Token(TokenType.OUT, "out", 2),
+                new Token(TokenType.DOT, ".", 2),
+                new Token(TokenType.PRINTLN, "println", 2),
+                new Token(TokenType.LPAREN, "(", 2),
+                new Token(TokenType.IDENTIFIER, "x", 2),
+                new Token(TokenType.RPAREN, ")", 2),
+                new Token(TokenType.SEMICOLON, ";", 2),
+                new Token(TokenType.RBRACE, "}", 3)
+        };
+
+        List<Token> actualTokens = lexer.lex(input);
+
+        for (int i = 0; i < expectedTokens.length; i++) {
+            assertEquals(expectedTokens[i], actualTokens.get(i));
+        }
+    }
+
 }
