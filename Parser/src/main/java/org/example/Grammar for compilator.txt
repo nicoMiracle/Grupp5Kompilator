@@ -1,0 +1,71 @@
+program -> statementList
+statementList -> (statement)*
+statement -> (whileStatement | ifStatement |  declarationStatement | assignStatement | returnStatement
+ | outputStatement | methodDeclarationStatement | methodCallStatement )
+
+whileStatement -> "while" "(" expression ")" blockStatement
+ifStatement -> "if" "(" expression ")" blockstatement
+declarationStatement-> type assignStatement
+assignStatement -> ID "=" expression ";"
+returnStatement -> "return" expression ";"
+blockStatement -> "{" statementList "}"
+methodDeclarationStatement -> type ID "(" Parameter ")" blockStatement
+methodCallStatement -> ID "(" expression ")"
+methodCallStatement -> ID "." ID "(" expression ")"
+
+expression -> termList | equals
+termList -> term*
+term >= intLiteral | ID | StringLiteral | methodCallStatement | inputStatement | positive term | negative term
+positive term -> +term
+negative term -> -term
+
+addition-> term "+" term
+subtraction -> term "-" term
+equals -> term "==" term
+
+inputStatement -> "input" "." "nextLine" "(" ")"
+outputStatement -> "System" "." "out" "." "println" "(" expression ")"
+
+parameter -> Type ID
+
+intLiteral -> digit+
+StringLiteral -> "(Any character)*"
+type -> ("int" | "string" | "void")
+ID -> StringLiteral
+letter -> (a...z | A...Z)
+digit -> 0...9
+
+//keeping these in
+Equals -> "==" expression
+MoreEq ->  ">=" expression
+LessEq ->  "<=" expression
+Less ->  "<" expression
+More ->  ">" expression
+NotEquals -> "!=" expression
+
+START
+END
+WHILE
+IF
+RETURN
+PLUS
+MINUS
+LPAR
+RPAR
+LBRAC
+RBRAC
+ASSIGN -> =
+EQUAL -> ==
+INPUT.NEXT.LINE()
+System.out.println
+
+
+//recursive descent parsing
+// profiler: string + or StringBuilder
+rekord for name of variable
+tokens som en rekord klass
+RBRAC
+ASSIGN -> =
+EQUAL -> ==
+INPUT.NEXT.LINE()
+System.out.println
