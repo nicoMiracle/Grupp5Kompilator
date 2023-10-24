@@ -164,6 +164,25 @@ public class Parser {
         return new ExpressionNode(parseTermNode());
     }
 
+    private boolean findEqual(){
+        for(int i = position; i < tokens.size();i++){
+            TokenType token = tokens.get(i).getType();
+            if(token.equals(TokenType.EQUAL)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public TermList parseTermList(){
+        TermList termList = new TermList();
+        while(position<tokens.size() && !tokens.get(position).getType().equals(TokenType.SEMICOLON)){
+            termList.add(parseTermNode());
+        }
+        return termList;
+    }
+
+
 
     public TermNode parseTermNode(){
 
