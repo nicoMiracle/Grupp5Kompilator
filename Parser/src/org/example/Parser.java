@@ -30,36 +30,44 @@ public class Parser {
         return statementListNode;
     }
 
-    public StatementNode parseStatementNode(){
+    public StatementNode parseStatementNode() {
 
-        if(tokens.get(position).getType().equals(TokenType.IDENTIFIER)){
+        if(tokens.get(position).getType().equals(TokenType.CONTROL_IF)){
+            return new StatementNode(parseIfStatement());
+        }else if(tokens.get(position).getType().equals(TokenType.CONTROL_WHILE)){
+            return new StatementNode(parseWhileStatement());
+        }else if(tokens.get(position).getType().equals(TokenType.IDENTIFIER)){
             String identifier = tokens.get(position).getLexeme();
-            position++;
-            if(tokens.get(position).getType().equals(TokenType.ASSIGN)){
+            if (position< tokens.size()){
                 position++;
-                return new StatementNode(parseAssignmentStatementNode(identifier));
+                if(match(TokenType.ASSIGN)){
+                    return new StatementNode(parseAssignmentStatementNode(identifier));
+                }else if ((tokens.get(position).getType().equals(TokenType.LPAREN))
+                        || tokens.get(position + 1).getType().equals(TokenType.DOT)) {
+                    return new StatementNode(parseMethodCall());
+                }else{
+                    throw new ParseException("Unexpected token: " + tokens.get(position).getLexeme() + " on line " + tokens.get(position).getLine());
+                }
+            }else{
+                throw new ParseException("Invalid statement");
             }
         }else if(tokens.get(position).getType().equals(TokenType.TYPE_INT) || tokens.get(position).getType().equals(TokenType.TYPE_STRING)){
-            String dataType = tokens.get(position).getLexeme(); //int
-            position++;
-            if (tokens.get(position).getType().equals(TokenType.IDENTIFIER) && tokens.get(position+1).getType().equals(TokenType.LPAREN)) {
-                return new StatementNode(parseMethodDeclarationStatement(dataType));
+            if (position< tokens.size()){
+                position++;
+                if (tokens.get(position).getType().equals(TokenType.IDENTIFIER) && tokens.get(position+1).getType().equals(TokenType.LPAREN)) {
+                    return new StatementNode(parseMethodDeclarationStatement());
+                }
+                return new StatementNode(parseDeclarationStatement());
+            }else{
+                throw new ParseException("Invalid statement");
             }
-            return new StatementNode(parseDeclarationStatement(dataType));
-        }else if(tokens.get(position).getType().equals(TokenType.KEYWORD_IF)){
-            return new StatementNode(parseIfStatement());
-        }else if(tokens.get(position).getType().equals(TokenType.KEYWORD_WHILE)){
-            return new StatementNode(parseWhileStatement());
-        }else if(tokens.get(position).getType().equals(TokenType.FUNCTION_RETURN)){
-            position++;
-            return new StatementNode(parseReturnStatement());
         }else if(tokens.get(position).getType().equals(TokenType.SYSTEM)){
             position++;
             return new StatementNode(parseOutputStatement());
         }else{
             throw new ParseException("Unexpected token: " + tokens.get(position).getLexeme() + " on line " + tokens.get(position).getLine());
         }
-        return null;
+
     }
 
     private MethodDeclarationStatement parseMethodDeclarationStatement(String dataType){
