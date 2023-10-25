@@ -2,15 +2,6 @@ package compilator;
 import java.util.List;
 
 public class Parser {
-    public static void main(String[] args) {
-        JavaLexer lexer = new JavaLexer();
-        List<Token> tokens = lexer.lex("hey=5;name=\"Nikki\";x=y;add=3+4+5+6;sub=3-4-5-6;mix=3+4-5+6-7;all=3+ID+\"text\"-ID-\"text\";");
-        List<Token> tokens2 = lexer.lex("if(this==true){x=y;int x =3;while(that==false){x=y;y=6;}}yes=\"YESSSS\";");
-        List<Token> tokens3 = lexer.lex("System.out.println(x); x=y; while(this==false){System.out.println(\"hello\");}");
-        Parser parser = new Parser(tokens3);
-        Code_Generator code_generator = new Code_Generator();
-        System.out.println(code_generator.generateCode(parser.parseProgram()));
-    }
     private final List<Token> tokens;
     private int position;
 
