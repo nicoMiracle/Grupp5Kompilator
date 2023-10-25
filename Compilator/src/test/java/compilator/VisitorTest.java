@@ -2,10 +2,12 @@ package compilator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VisitorTest {
+
     @Test
     @DisplayName("Generate a program with no Statements in it")
     void generateEmptyProgram() {
@@ -146,6 +148,21 @@ public class VisitorTest {
         Code_Generator code_generator = new Code_Generator();
         assertEquals("if(x==\"true\"):\n   y=\"false\"", code_generator.generateCode(programNode), "the result was not the one expected");
     }
+    @Test
+    @DisplayName("Generate if Statement with one expression and one statement inside")
+    void generateIf(){
+        StatementListNode statementListNode = new StatementListNode();
+        statementListNode.addStatement(ifStatementTree());
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        Code_Generator code_generator = new Code_Generator();
+        String[] code = code_generator.generateCode(programNode).split("\n");
+        assertThat(code,arrayWithSize(2));
+        assertThat(code[0],containsString("if(x==\"true\"):"));
+        assertThat(code[1],allOf(
+                equalToCompressingWhiteSpace("y=\"false\""),
+                matchesPattern("^(\\s{3}|\t).*$"))
+        );
+    }
     private StatementNode ifStatementTree(){
         StatementListNode statementListNodeIf = new StatementListNode();
         BlockStatement blockStatementIf = new BlockStatement(statementListNodeIf);
@@ -165,15 +182,42 @@ public class VisitorTest {
         StatementListNode statementListNode = new StatementListNode();
         ProgramNode programNode = new ProgramNode(statementListNode);
         statementListNode.addStatement(whileMultipleStatementsTree());
-        TermList termList3 = new TermList();
-        termList3.add(new TermNode(new IntegerLiteralNode(32)));
-        ExpressionNode expressionNode3 = new ExpressionNode(termList3);
-        StatementNode statementNode3 = new StatementNode(new AssignmentStatementNode(new IdentifierNode("x"), expressionNode3));
-        statementListNode.addStatement(statementNode3);
+        statementListNode.addStatement(statementNodeOutsideWhile());
 
         Code_Generator code_generator = new Code_Generator();
         assertEquals("while(x==\"true\"):\n   y=\"false\"\n   z=32\n   b=32+6\nx=32", code_generator.generateCode(programNode), "the result was not the one expected");
     }
+    @Test
+    @DisplayName("Generate the same as the one above but using matchers")
+    void testWhileMultipleStatementsMatchers(){
+        StatementListNode statementListNode = new StatementListNode();
+        ProgramNode programNode = new ProgramNode(statementListNode);
+        statementListNode.addStatement(whileMultipleStatementsTree());
+        statementListNode.addStatement(statementNodeOutsideWhile());
+        Code_Generator code_generator = new Code_Generator();
+        String[] code = code_generator.generateCode(programNode).split("\n");
+
+        assertThat(code,arrayWithSize(5));
+        assertThat(code[0],equalTo("while(x==\"true\"):"));
+        assertThat(code[1],allOf(
+                equalToCompressingWhiteSpace("y=\"false\""),
+                matchesPattern("^(\\s{3}|\t).*$")
+        ));
+        assertThat(code[2],allOf(
+                equalToCompressingWhiteSpace("z=32"),
+                matchesPattern("^(\\s{3}|\t).*$")
+        ));
+        assertThat(code[3],allOf(
+                equalToCompressingWhiteSpace("b=32+6"),
+                matchesPattern("^(\\s{3}|\t).*$")
+        ));
+        assertThat(code[4],allOf(
+                equalToCompressingWhiteSpace("x=32"),
+                matchesPattern("^(\\s{0}|\t).*$")
+        ));
+    }
+
+
 private StatementNode whileMultipleStatementsTree(){
     StatementListNode statementListNodeWhile = new StatementListNode();
     BlockStatement blockStatementWhile = new BlockStatement(statementListNodeWhile);
@@ -199,6 +243,12 @@ private StatementNode whileMultipleStatementsTree(){
     statementListNodeWhile.addStatement(statementNode2);
     return new StatementNode(whileNode);
 }
+private StatementNode statementNodeOutsideWhile(){
+        TermList termList3 = new TermList();
+        termList3.add(new TermNode(new IntegerLiteralNode(32)));
+        ExpressionNode expressionNode3 = new ExpressionNode(termList3);
+        return new StatementNode(new AssignmentStatementNode(new IdentifierNode("x"), expressionNode3));
+    }
     @Test
     @DisplayName("Generate an assignment statement where a empty method call is used")
     void testGenerateAssignmentMethodCall() {
