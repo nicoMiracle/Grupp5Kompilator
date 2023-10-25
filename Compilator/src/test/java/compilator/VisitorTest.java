@@ -503,33 +503,36 @@ private StatementNode whileMultipleStatementsTree(){
         StatementListNode statementListNodeProgram = new StatementListNode();
         ProgramNode programNode = new ProgramNode(statementListNodeProgram);
         //All positives
-        statementListNodeProgram.addStatement(firstStatement());
+        statementListNodeProgram.addStatement(allPositives());
         //All negatives
-        statementListNodeProgram.addStatement(secondStatement());
+        statementListNodeProgram.addStatement(allNegatives());
         //Declaration Assignment with int
-        statementListNodeProgram.addStatement(thirdStatement());
+        statementListNodeProgram.addStatement(declarationIntStatement());
         //Assignment with String
-        statementListNodeProgram.addStatement(fourthStatement());
+        statementListNodeProgram.addStatement(assignmentStringStatement());
         //Assignment with input
-       statementListNodeProgram.addStatement(fifthStatement());
+        statementListNodeProgram.addStatement(assignmentInputStatement());
         //Assignment with method call, one identifier
-        statementListNodeProgram.addStatement(sixthStatement());
+        statementListNodeProgram.addStatement(assignmentMethodCallStatement());
         //Assignment with method call, two identifier
-        statementListNodeProgram.addStatement(seventhStatement());
+        statementListNodeProgram.addStatement(objectMethodCallStatement());
         //Assignment with method call, one identifier, one parameter
-        statementListNodeProgram.addStatement(eightStatement());
+        statementListNodeProgram.addStatement(methodCallParameterStatement());
         //Assignment with method call, two identifier, one parameter
-        statementListNodeProgram.addStatement(ninthStatement());
+        statementListNodeProgram.addStatement(objectMethodCallParameterStatement());
         //One line of output
-        statementListNodeProgram.addStatement(tenthStatement());
-        //One function with a parameter, one while inside that, one if inside, one variable and return
-        statementListNodeProgram.addStatement(eleventhStatement());
+        statementListNodeProgram.addStatement(OutputStatement());
+        //One method with a parameter, one while inside that, one if inside, one variable and return
+        statementListNodeProgram.addStatement(nestedMethodWhileIfReturnStatement());
         //method declaration, no parameters, one output inside
-        statementListNodeProgram.addStatement(twelfthStatement());
+        statementListNodeProgram.addStatement(methodDeclarationStatement());
         //one method call as statement
         statementListNodeProgram.addStatement(new StatementNode(new MethodCall(new IdentifierNode("hello"))));
         Code_Generator code_generator = new Code_Generator();
-        assertEquals("""
+        assertEquals(expectedLongString(),code_generator.generateCode(programNode),"did not get expected");
+    }
+    private String expectedLongString(){
+        return """
                 x=1+2+"text"+ID+input()+method()
                 x=1-2-"text"-ID-input()-method()
                 int=5
@@ -547,9 +550,9 @@ private StatementNode whileMultipleStatementsTree(){
                          return name
                 def hello():
                    print("Hello!")
-                hello()""",code_generator.generateCode(programNode),"did not get expected");
+                hello()""";
     }
-    private StatementNode firstStatement(){
+    private StatementNode allPositives(){
         TermList termList = new TermList();
         termList.add(new TermNode(new IntegerLiteralNode(1)));
         termList.add(new TermNode(new PositiveTermNode(new IntegerLiteralNode(2))));
@@ -560,7 +563,7 @@ private StatementNode whileMultipleStatementsTree(){
         ExpressionNode expressionNode = new ExpressionNode(termList);
         return new StatementNode(new AssignmentStatementNode(new IdentifierNode("x"),expressionNode));
     }
-    private StatementNode secondStatement(){
+    private StatementNode allNegatives(){
         TermList termList1 = new TermList();
         termList1.add(new TermNode(new IntegerLiteralNode(1)));
         termList1.add(new TermNode(new NegativeTerm(new IntegerLiteralNode(2))));
@@ -571,37 +574,37 @@ private StatementNode whileMultipleStatementsTree(){
         ExpressionNode expressionNode1 = new ExpressionNode(termList1);
         return new StatementNode(new AssignmentStatementNode(new IdentifierNode("x"), expressionNode1));
     }
-    private StatementNode thirdStatement(){
+    private StatementNode declarationIntStatement(){
         TermList termList2 = new TermList();
         termList2.add(new TermNode(new IntegerLiteralNode(5)));
         ExpressionNode expressionNode2 = new ExpressionNode(termList2);
         return new StatementNode(new DeclarationStatement(new AssignmentStatementNode(new IdentifierNode("int"),expressionNode2)));
     }
-    private StatementNode fourthStatement(){
+    private StatementNode assignmentStringStatement(){
         TermList termList3 = new TermList();
         termList3.add(new TermNode(new StringLiteralNode("Zoe")));
         ExpressionNode expressionNode3 = new ExpressionNode(termList3);
         return new StatementNode(new AssignmentStatementNode(new IdentifierNode("string"), expressionNode3));
     }
-    private StatementNode fifthStatement(){
+    private StatementNode assignmentInputStatement(){
         TermList termList4 = new TermList();
         termList4.add(new TermNode(new InputStatement()));
         ExpressionNode expressionNode4 = new ExpressionNode(termList4);
         return new StatementNode(new AssignmentStatementNode(new IdentifierNode("say_hi"), expressionNode4));
     }
-    private StatementNode sixthStatement(){
+    private StatementNode assignmentMethodCallStatement(){
         TermList termList5 = new TermList();
         termList5.add(new TermNode(new MethodCall(new IdentifierNode("getSix"))));
         ExpressionNode expressionNode5 = new ExpressionNode(termList5);
         return new StatementNode(new AssignmentStatementNode(new IdentifierNode("six"),expressionNode5));
     }
-    private StatementNode seventhStatement(){
+    private StatementNode objectMethodCallStatement(){
         TermList termList6 = new TermList();
         termList6.add(new TermNode(new MethodCall(new IdentifierNode("Math"),new IdentifierNode("getSeven"))));
         ExpressionNode expressionNode6 = new ExpressionNode(termList6);
         return new StatementNode(new AssignmentStatementNode(new IdentifierNode("seven"), expressionNode6));
     }
-    private StatementNode eightStatement(){
+    private StatementNode methodCallParameterStatement(){
         TermList termList7 = new TermList();
         TermList termList8 = new TermList();
         termList8.add(new TermNode(new IntegerLiteralNode(5)));
@@ -609,7 +612,7 @@ private StatementNode whileMultipleStatementsTree(){
         ExpressionNode expressionNode7 = new ExpressionNode(termList7);
         return new StatementNode(new AssignmentStatementNode(new IdentifierNode("eight"), expressionNode7));
     }
-    private StatementNode ninthStatement(){
+    private StatementNode objectMethodCallParameterStatement(){
         TermList termList9 = new TermList();
         TermList termList10 = new TermList();
         termList10.add(new TermNode(new IntegerLiteralNode(0)));
@@ -617,13 +620,13 @@ private StatementNode whileMultipleStatementsTree(){
         ExpressionNode expressionNode8 = new ExpressionNode(termList9);
         return new StatementNode(new AssignmentStatementNode(new IdentifierNode("maxInt"), expressionNode8));
     }
-    private StatementNode tenthStatement(){
+    private StatementNode OutputStatement(){
         TermList termList11 = new TermList();
         termList11.add(new TermNode(new StringLiteralNode("Hello World")));
         OutputStatement outputStatement = new OutputStatement(new ExpressionNode(termList11));
         return new StatementNode(outputStatement);
     }
-    private StatementNode eleventhStatement(){
+    private StatementNode nestedMethodWhileIfReturnStatement(){
         ParameterListNode parameterListNode = new ParameterListNode();
         parameterListNode.addParameter(new ParameterNode(new IdentifierNode("number")));
         StatementListNode statementListNode1 = new StatementListNode();
@@ -649,7 +652,7 @@ private StatementNode whileMultipleStatementsTree(){
         MethodDeclarationStatement methodDeclarationStatement = new MethodDeclarationStatement(new IdentifierNode("method"),parameterListNode,blockStatementMethod);
         return new StatementNode(methodDeclarationStatement);
     }
-    private StatementNode twelfthStatement(){
+    private StatementNode methodDeclarationStatement(){
         StatementListNode statementListNode4 = new StatementListNode();
         TermList termList15 = new TermList();
         termList15.add(new TermNode(new StringLiteralNode("Hello!")));
