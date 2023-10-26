@@ -152,18 +152,14 @@ public class Parser {
         return new ExpressionNode(parseTermList());
     }
 
-    public TermList parseTermList(){
+   public TermList parseTermList(){
         TermList termList = new TermList();
         while(position<tokens.size() && !tokens.get(position).type().equals(TokenType.SEMICOLON)
                 && !tokens.get(position).type().equals(TokenType.RPAREN)){
             termList.add(parseTermNode());
         }
 
-        if (termList.isTermsEmpty()) {
-            throw new ParseException("Error: a value must be assigned");
-        } else {
-            return termList;
-        }
+        return termList;
     }
 
     public TermNode parseTermNode(){
