@@ -64,6 +64,18 @@ public class JavaLexerTest {
         lexer.lex(input);
         assertEquals(expectedErrorMessage, errContent.toString());
     }
+    @Test
+    public void testThreeUnrecognizedCharacters() {
+        DefaultLexerErrorListener listener = new DefaultLexerErrorListener();
+        lexer.setListener(listener);
+        String input = "x = y#z&&";
+        int lineNumber = 1;
+        String expectedErrorMessage1 = "Unrecognized character: '#' at line: " + lineNumber +'\n';
+        String expectedErrorMessage2= "Unrecognized character: '&' at line: " + lineNumber +'\n';
+        String expectedErrorMessage3= "Unrecognized character: '&' at line: " + lineNumber +'\n';
+        lexer.lex(input);
+        assertEquals(expectedErrorMessage1+expectedErrorMessage2+expectedErrorMessage3, errContent.toString());
+    }
 
 
     @Test
@@ -98,7 +110,6 @@ public class JavaLexerTest {
     public void testSystemOutPrintlnEmpty() {
         JavaLexer lexer = new JavaLexer();
         String input = "System.out.println();";
-
         Token[] expectedTokens = {
                 new Token(TokenType.SYSTEM, "System", 1),
                 new Token(TokenType.DOT, ".", 1),
@@ -109,9 +120,7 @@ public class JavaLexerTest {
                 new Token(TokenType.RPAREN, ")", 1),
                 new Token(TokenType.SEMICOLON, ";", 1)
         };
-
         List<Token> actualTokens = lexer.lex(input);
-
         for (int i = 0; i < expectedTokens.length; i++) {
             assertEquals(expectedTokens[i], actualTokens.get(i));
         }
@@ -284,7 +293,6 @@ public class JavaLexerTest {
     public void testInputAndNextLine() {
         JavaLexer lexer = new JavaLexer();
         String input = "x = input.nextLine(); while(i==true){System.out.println(x);}";
-
         Token[] expectedTokens = {
                 new Token(TokenType.IDENTIFIER, "x", 1),
                 new Token(TokenType.ASSIGN, "=", 1),
@@ -312,12 +320,54 @@ public class JavaLexerTest {
                 new Token(TokenType.SEMICOLON, ";", 2),
                 new Token(TokenType.RBRACE, "}", 3)
         };
-
         List<Token> actualTokens = lexer.lex(input);
-
         for (int i = 0; i < expectedTokens.length; i++) {
             assertEquals(expectedTokens[i], actualTokens.get(i));
         }
     }
-
+    @Test
+    public void testEndingWithAnIntegerLiteral() {
+        JavaLexer lexer = new JavaLexer();
+        String input = "x = 5472";
+        Token[] expectedTokens = {
+                new Token(TokenType.IDENTIFIER, "x", 1),
+                new Token(TokenType.ASSIGN, "=", 1),
+                new Token(TokenType.INTEGER_LITERAL, "5472", 1)
+        };
+        List<Token> actualTokens = lexer.lex(input);
+        for (int i = 0; i < expectedTokens.length; i++) {
+            assertEquals(expectedTokens[i], actualTokens.get(i));
+        }
+    }
+    @Test
+    public void testEndingWithAMatchingToken() {
+        JavaLexer lexer = new JavaLexer();
+        String input = "int x=4; System";
+        Token[] expectedTokens = {
+                new Token(TokenType.TYPE_INT, "int", 1),
+                new Token(TokenType.IDENTIFIER, "x", 1),
+                new Token(TokenType.ASSIGN, "=", 1),
+                new Token(TokenType.INTEGER_LITERAL, "4", 1),
+                new Token(TokenType.SEMICOLON, ";", 1),
+                new Token(TokenType.SYSTEM, "System", 2)
+        };
+        List<Token> actualTokens = lexer.lex(input);
+        for (int i = 0; i < expectedTokens.length; i++) {
+            assertEquals(expectedTokens[i], actualTokens.get(i));
+        }
+    }
+    @Test
+    public void testEndingWithoutSecondQuotation() {
+        JavaLexer lexer = new JavaLexer();
+        String input = "String result= \"";
+        Token[] expectedTokens = {
+                new Token(TokenType.TYPE_STRING, "String", 1),
+                new Token(TokenType.IDENTIFIER, "result", 1),
+                new Token(TokenType.ASSIGN, "=", 1)
+        };
+        List<Token> actualTokens = lexer.lex(input);
+        for (int i = 0; i < expectedTokens.length; i++) {
+            assertEquals(expectedTokens[i], actualTokens.get(i));
+        }
+    }
 }
