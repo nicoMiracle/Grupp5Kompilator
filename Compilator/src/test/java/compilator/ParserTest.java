@@ -62,6 +62,21 @@ public class ParserTest {
     @DisplayName("Test if it throws Parser exception in Assignment statement node with no value")
     void testIfParseAssignmentStatementThrowsException() {
 
+        //}=5;
+        List<Token> tokens = new ArrayList<>();
+        tokens.add(new Token(TokenType.RBRACE, "}", 3));
+        tokens.add(new Token(TokenType.ASSIGN, "=", 3));
+        tokens.add(new Token(TokenType.SEMICOLON, ";", 3));
+
+        parser = new Parser(tokens);
+        assertThrows( ParseException.class, () -> parser.parseStatementNode());
+    }
+
+
+    @Test
+    @DisplayName("Test if parse term list throws Parser exception with no value")
+    void testIfParseTermListThrowsException() {
+
         //x=;
         List<Token> tokens = new ArrayList<>();
         tokens.add(new Token(TokenType.IDENTIFIER, "x", 3));
@@ -72,24 +87,13 @@ public class ParserTest {
         assertThrows( ParseException.class, () -> parser.parseStatementNode());
     }
 
-    @Test
-    @DisplayName("Test if it throws Parser exception in statement node with invalid statement syntax")
-    void testIfParseStatementNodeThrowsException() {
 
-        //x)
-        List<Token> tokens = new ArrayList<>();
-        tokens.add(new Token(TokenType.IDENTIFIER, "x", 3));
-        tokens.add(new Token(TokenType.RPAREN, ")", 3));
-
-        parser = new Parser(tokens);
-        assertThrows( ParseException.class, () -> parser.parseStatementNode());
-    }
 
     @Test
     @DisplayName("Test if it throws Parser exception in statement node with invalid statement syntax")
     void testIfParseStatementNodeThrowsExceptionWithInvalidStatement() {
 
-        //x
+        //x);
         List<Token> tokens = new ArrayList<>();
         tokens.add(new Token(TokenType.IDENTIFIER, "x", 3));
         tokens.add(new Token(TokenType.RPAREN, ")", 3));
@@ -211,6 +215,22 @@ public class ParserTest {
     }
 
     @Test
+    @DisplayName("Test Assignment statement node with invalid assignment")
+    void testNegativeTermThrowsExceptionWithInvalidAssign() {
+
+        List<Token> tokens = new ArrayList<>();
+        // x= x-;
+        tokens.add(new Token(TokenType.IDENTIFIER, "x", 2));
+        tokens.add(new Token(TokenType.ASSIGN, "=", 2));
+        tokens.add(new Token(TokenType.IDENTIFIER, "x", 2));
+        tokens.add(new Token(TokenType.MINUS, "-", 2));
+        tokens.add(new Token(TokenType.SEMICOLON, ";", 2));
+
+        parser = new Parser(tokens);
+        assertThrows( ParseException.class, () -> parser.parseStatementNode());
+    }
+
+    @Test
     @DisplayName("Test Assignment statement node with multiple binary expression value")
     void testParseAssignmentStatementWithMultipleBinaryExpressionValue() {
 
@@ -323,11 +343,13 @@ public class ParserTest {
 
         List<Token> tokens = new ArrayList<>();
         /*
-        String str = "Hello" - x - 5 - input.nextLine() - get(x);
+        String str = "Hello" - "Hello"- x - 5 - input.nextLine() - get(x);
          */
         tokens.add(new Token(TokenType.TYPE_STRING, "String", 1));
         tokens.add(new Token(TokenType.IDENTIFIER, "str", 2));
         tokens.add(new Token(TokenType.ASSIGN, "=", 3));
+        tokens.add(new Token(TokenType.STRING_LITERAL, "\"Hello\"", 4));
+        tokens.add(new Token(TokenType.MINUS, "-", 5));
         tokens.add(new Token(TokenType.STRING_LITERAL, "\"Hello\"", 4));
         tokens.add(new Token(TokenType.MINUS, "-", 5));
         tokens.add(new Token(TokenType.IDENTIFIER,"x",6));
