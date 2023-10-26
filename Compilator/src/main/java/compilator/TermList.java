@@ -10,9 +10,6 @@ public class TermList {
     public void add(TermNode termNode){
         terms.add(termNode);
     }
-    public boolean isTermsEmpty() {
-        return terms.isEmpty();
-    }
     public ArrayList<TermNode> getTerms(){
         return terms;
     }
