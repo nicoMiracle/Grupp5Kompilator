@@ -1,8 +1,14 @@
 package compilator;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +62,42 @@ public class ParserTest {
         assertDoesNotThrow( () -> {
             parser.parseStatementNode();
         });
+    }
+    @Test
+    @DisplayName("Test assignment statement node with one int")
+    void testParseAssignmentStatementWithInt(){
+        List<Token> tokens = new ArrayList<>();
+        // x= 2-300;
+        tokens.add(new Token(TokenType.IDENTIFIER,"x",2));
+        tokens.add(new Token(TokenType.ASSIGN,"=",2));
+        tokens.add(new Token(TokenType.INTEGER_LITERAL,"2",2));
+        tokens.add(new Token(TokenType.SEMICOLON,";",2));
+        parser = new Parser(tokens);
+
+        ProgramNode programNode = parser.parseProgram();
+        assertThat(programNode, Matchers.hasProperty("statements", Matchers.notNullValue()));
+
+        StatementListNode statements = programNode.getStatements();
+        MatcherAssert.assertThat(statements.getStatementNodes(), Matchers.hasSize(1));
+
+        StatementNode statement = statements.getStatementNodes().get(0);
+        assertThat(statement, Matchers.hasProperty("assign",Matchers.notNullValue()));
+
+        AssignmentStatementNode assignmentStatement =statement.getAssign();
+        assertThat(assignmentStatement, Matchers.hasProperty("identifier",Matchers.notNullValue()));
+        assertThat(assignmentStatement.getIdentifier().getName(),equalToIgnoringCase("x"));
+        assertThat(assignmentStatement, Matchers.hasProperty("expression",Matchers.notNullValue()));
+
+        ExpressionNode expression = assignmentStatement.getExpression();
+        assertThat(expression,Matchers.hasProperty("termList",Matchers.notNullValue()));
+
+        TermList termList = expression.getTermList();
+        assertThat(termList.getTerms(),Matchers.hasSize(1));
+        TermNode term = termList.getTerms().get(0);
+
+        assertThat(term,Matchers.hasProperty("integerLiteralNode",Matchers.notNullValue()));
+        assertThat(term.getIntegerLiteralNode().getValue(),equalTo(2));
+
     }
 
     @Test
