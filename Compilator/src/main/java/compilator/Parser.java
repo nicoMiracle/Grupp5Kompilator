@@ -129,7 +129,7 @@ public class Parser {
             ExpressionNode expressionNode = parseExpression();
             match(TokenType.RPAREN);
             return new MethodCall(identifierFirstNode, expressionNode);
-        }else if(tokens.get(position).type().equals(TokenType.DOT)){
+        } else{
             position++;
             IdentifierNode identifierSecondNode = parseIdentifierNode(tokens.get(position).lexem());
             position++;
@@ -138,8 +138,6 @@ public class Parser {
             match(TokenType.RPAREN);
             match(TokenType.SEMICOLON);
             return new MethodCall(identifierFirstNode, identifierSecondNode, expressionNode);
-        }else {
-            throw new ParseException("Unexpected token: " + tokens.get(position).lexem() + " on line " + tokens.get(position).line());
         }
 
     }
@@ -161,10 +159,10 @@ public class Parser {
             termList.add(parseTermNode());
         }
 
-        if (!termList.isTermsEmpty()){
-            return termList;
-        }else{
+        if (termList.isTermsEmpty()) {
             throw new ParseException("Error: a value must be assigned");
+        } else {
+            return termList;
         }
     }
 
@@ -200,39 +198,52 @@ public class Parser {
             throw new ParseException("Unexpected token: " + tokens.get(position).lexem() + " on line " + tokens.get(position).line());
         }
     }
-    private PositiveTermNode parsePositiveTerm(){
+
+    private PositiveTermNode parsePositiveTerm() {
         TermNode termNode = parseTermNode();
-        if(termNode.getIdentifierNode()!=null){
-            return new PositiveTermNode(termNode.getIdentifierNode());
-        }else  if(termNode.getIntegerLiteralNode()!=null){
-            return new PositiveTermNode(termNode.getIntegerLiteralNode());
-        }else  if(termNode.getStringLiteralNode()!=null){
-            return new PositiveTermNode(termNode.getStringLiteralNode());
-        }else  if(termNode.getInput()!=null){
-            return new PositiveTermNode(termNode.getInput());
-        }else  if(termNode.getMethodCall()!=null){
-            return new PositiveTermNode(termNode.getMethodCall());
-        }else{
-            throw new ParseException("Invalid token after Plus: " + tokens.get(position).lexem() + " on line " + tokens.get(position).line());
+        PositiveTermNode positiveTermNode = null;
+
+        if (termNode.getIdentifierNode() != null) {
+            positiveTermNode = new PositiveTermNode(termNode.getIdentifierNode());
         }
+        if (termNode.getIntegerLiteralNode() != null) {
+            positiveTermNode = new PositiveTermNode(termNode.getIntegerLiteralNode());
+        }
+        if (termNode.getStringLiteralNode() != null) {
+            positiveTermNode = new PositiveTermNode(termNode.getStringLiteralNode());
+        }
+        if (termNode.getInput() != null) {
+            positiveTermNode = new PositiveTermNode(termNode.getInput());
+        }
+        if (termNode.getMethodCall() != null) {
+            positiveTermNode = new PositiveTermNode(termNode.getMethodCall());
+        }
+
+        return positiveTermNode;
     }
-    private NegativeTerm parseNegativeTerm(){
+
+    private NegativeTerm parseNegativeTerm() {
         TermNode termNode = parseTermNode();
-        if(termNode.getIdentifierNode()!=null){
-            return new NegativeTerm(termNode.getIdentifierNode());
-        }else  if(termNode.getIntegerLiteralNode()!=null){
-            return new NegativeTerm(termNode.getIntegerLiteralNode());
-        }else  if(termNode.getStringLiteralNode()!=null){
-            return new NegativeTerm(termNode.getStringLiteralNode());
+        NegativeTerm negativeTerm = null;
+
+        if (termNode.getIdentifierNode() != null) {
+            negativeTerm = new NegativeTerm(termNode.getIdentifierNode());
         }
-        else  if(termNode.getInput()!=null){
-            return new NegativeTerm(termNode.getInput());
-        }else  if(termNode.getMethodCall()!=null){
-            return new NegativeTerm(termNode.getMethodCall());
-        }else{
-            throw new ParseException("Invalid token after Minus : " + tokens.get(position).lexem() + " on line " + tokens.get(position).line());
+        if (termNode.getIntegerLiteralNode() != null) {
+            negativeTerm = new NegativeTerm(termNode.getIntegerLiteralNode());
         }
+        if (termNode.getStringLiteralNode() != null) {
+            negativeTerm = new NegativeTerm(termNode.getStringLiteralNode());
+        }
+        if (termNode.getInput() != null) {
+            negativeTerm = new NegativeTerm(termNode.getInput());
+        }
+        if (termNode.getMethodCall() != null) {
+            negativeTerm = new NegativeTerm(termNode.getMethodCall());
+        }
+        return negativeTerm;
     }
+
     private WhileNode parseWhileStatement() {
         match(TokenType. WHILE); // Match the "if" keyword
         match(TokenType.LPAREN); // Match the opening parenthesis
@@ -296,7 +307,6 @@ public class Parser {
             throw new ParseException("Expected " + expectedType + " but found " + token.type() + " on line " + token.line());
         }
     }
-
 }
 
 
